@@ -3,8 +3,6 @@
 This software now supports multiple encryption layers!
 
 When using the first time, 
-
--> use gethash command to get hash numbers for your user id and password
 -> change the definitions in the main.cpp with corresponding hashes
 -> compile and use
 
