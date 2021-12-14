@@ -46,15 +46,17 @@ int main(){
             #ifdef _WIN32
                     system("cls");
             #endif
+            std::cout << "Welcome back " << id << std::endl << std::endl;
             while (handleEncDec(id, password));
         }
         else {
             std::cout << std::endl << "Id or password is wrong." << std::endl;
-#ifdef _WIN32
+        #ifdef _WIN32
             system("pause");
-#endif
+        #endif
         }
     }
+
     else if( command == "gethash" ){
         std::cout << "To exit, enter 'exit' " << std::endl;
         while(text != "exit"){
@@ -62,9 +64,21 @@ int main(){
             std::cout << "Hash of " << text << " = " << hash_str(text.c_str()) << std::endl;
         }
     }
+    #ifdef __APPLE__
+    system("clear");
+    #endif // 
+    #ifdef _WIN32
+    system("cls");
+    #endif
 
     return 0;
 }
+
+
+
+
+
+
 
 
 bool checkUser(std::string id, std::string password) {
@@ -97,72 +111,85 @@ bool writeTextToFile(std::string filepath, const std::string text){
 }
 
 bool handleEncDec(std::string id, std::string password){
-    std::string seed, filepath, filepath_out, text, command;
+    std::string seed, filepath, filepath_out, text, command , number;
+    int num = 1;
     
-        std::cout << "Welcome back " << id << std::endl << std::endl;
-
-        std::cout << "Enter a command ( enc : encrypt, dec : decrypt, exit : exit) : ";
-        std::cin >> command;
-        
-
-        if(command == "enc"){
-            std::cout << "Enter the file path : ";
-            std::cin >> filepath;
-            if( !getTextFromFile(filepath, text) ){
-                std::cout << "Couldn't open " << filepath << std::endl;
-            }
-            else{
-                std::cout << "Enter the output file path (to leave it as default enter '.' ): ";
-                std::cin >> filepath_out;
-                if (filepath_out == "."){
-                    filepath_out = filepath.substr(0, filepath.find_last_of('.')) + ".enc";
-                }
-                std::cout << "Enter a seed : ";
-                std::cin >> seed;
-                EncryptEngine e_engine(text, seed, password + id);
-                std::string encrypted = e_engine.getEncryptedText();
-                if( !writeTextToFile(filepath_out, encrypted) ){
-                    std::cout << "Couldn't open " << filepath_out << std::endl;
-                }
-                else{
-                    std::cout << filepath << " is encypted and written to \'" << filepath_out << "\'" << std::endl;
-                }
-            }
-        }
-        
-        else if ( command == "dec" ){
-            std::cout << "Enter the file path : ";
-            std::cin >> filepath;
-            if( !getTextFromFile(filepath, text) ){
-                std::cout << "Couldn't open " << filepath << std::endl;
-            }
-            else{
-                std::cout << "Enter the output file path (to leave it as default enter '.' ): ";
-                std::cin >> filepath_out;
-                if (filepath_out == "."){
-                    if(filepath.find(".enc")){
-                        filepath_out = filepath.substr(0, filepath.find_last_of('.')) + "_dec" + ".txt";
-                    }
-                }
-                std::cout << "Enter a seed : ";
-                std::cin >> seed;
-                DecryptEngine d_engine(text, seed, password + id);
-                std::string decrypted = d_engine.getDecryptedText();
-                if( !writeTextToFile(filepath_out, decrypted) ){
-                    std::cout << "Couldn't open " << filepath_out << std::endl;
-                }
-                else{
-                    std::cout << filepath << " is decrypted and written to \'" << filepath_out << "\'" << std::endl;
-                }
-            }
-        }
-        else if( command == "exit" ){
-            return false;
+    std::cout << "Enter a command ( enc : encrypt, dec : decrypt, exit : exit) : ";
+    std::cin >> command;
+    if(command == "enc"){
+        std::cout << "Layers of encryption : ";
+        std::cin >> number;
+        std::cout << "Enter the file path : ";
+        std::cin >> filepath;
+        if( !getTextFromFile(filepath, text) ){
+            std::cout << "Couldn't open " << filepath << std::endl;
         }
         else{
-            std::cout << "Wrong input." << std::endl;
+            std::cout << "Enter the output file path (to leave it as default enter '.' ): ";
+            std::cin >> filepath_out;
+            if (filepath_out == "."){
+                filepath_out = filepath.substr(0, filepath.find_last_of('.')) + ".enc";
+            }
+            std::string encrypted = text;
+            if(number != ""){
+                num = atoi(number.c_str());
+            }
+            for(int i = 0; i < num ; i++){
+                std::cout << "Enter a seed : ";
+                std::cin >> seed;
+                EncryptEngine e_engine(encrypted, seed, password + id);
+                encrypted = e_engine.getEncryptedText();
+            }
+            if( !writeTextToFile(filepath_out, encrypted) ){
+                std::cout << "Couldn't open " << filepath_out << std::endl;
+            }
+            else{
+                std::cout << filepath << " is encypted and written to \'" << filepath_out << "\'" << std::endl;
+            }
         }
+    }
     
+    else if ( command == "dec" ){
+        std::cout << "Layers of decryption : ";
+        std::cin >> number;
+        std::cout << "Enter the file path : ";
+        std::cin >> filepath;
+        if( !getTextFromFile(filepath, text) ){
+            std::cout << "Couldn't open " << filepath << std::endl;
+        }
+        else{
+            std::cout << "Enter the output file path (to leave it as default enter '.' ): ";
+            std::cin >> filepath_out;
+            if (filepath_out == "."){
+                if(filepath.find(".enc")){
+                    filepath_out = filepath.substr(0, filepath.find_last_of('.')) + "_dec" + ".txt";
+                }
+            }
+            std::string decrypted = text;
+            if(number != ""){
+                num = atoi(number.c_str());
+            }
+            for(int i = 0; i < num ; i++){
+                std::cout << "Enter a seed : ";
+                std::cin >> seed;
+                DecryptEngine d_engine(decrypted, seed, password + id);
+                decrypted = d_engine.getDecryptedText();
+            }
+            if( !writeTextToFile(filepath_out, decrypted) ){
+                std::cout << "Couldn't open " << filepath_out << std::endl;
+            }
+            else{
+                std::cout << filepath << " is decrypted and written to \'" << filepath_out << "\'" << std::endl;
+            }
+        }
+    }
+    else if( command == "exit" ){
+        return false;
+    }
+    else{
+        std::cout << "Wrong input." << std::endl;
+    }
+
     
     return true;
 }
