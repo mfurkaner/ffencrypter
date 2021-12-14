@@ -1,4 +1,4 @@
-# txtencryptor
+# TXTEncryptor
 
 When using the first time, 
 
@@ -24,3 +24,5 @@ To decrypt a file
 -> enter a path for the decrypted output file  ( enter '.' to use default path )
 -> enter the seed for decryption
 -> you are good to go
+
+This software supports multiple encryption layers!
