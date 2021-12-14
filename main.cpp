@@ -106,9 +106,8 @@ bool handleEncDec(std::string id, std::string password){
                 std::cout << "Enter the output file path (to leave it as default enter '.' ): ";
                 std::cin >> filepath_out;
                 if (filepath_out == "."){
-                    filepath_out = "dec_" + filepath;
                     if(filepath.find(".enc")){
-                        filepath_out = filepath_out.substr(0, filepath_out.find_last_of('.')) + ".txt";
+                        filepath_out = filepath.substr(0, filepath.find_last_of('.')) + "_dec" + ".txt";
                     }
                 }
                 std::cout << "Enter a seed : ";
