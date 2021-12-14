@@ -4,8 +4,17 @@
 #include <fstream>
 #include "encrpytengine.hpp"
 
+#ifdef __APPLE__
+#define ERASE_STR "\033[A\33[2K\033[A\33[2K"
+#endif
+
+#ifdef _WIN32
+#define ERASE_STR ""
+#endif
+
 unsigned long long hash_str(const char* s);
 
+bool checkUser(std::string id, std::string pass);
 bool getTextFromFile(std::string filepath, std::string& text);
 bool writeTextToFile(std::string filepath, const std::string text);
 bool handleEncDec(std::string id, std::string pass);
@@ -22,12 +31,21 @@ int main(){
     std::cin >> command;
 
     if( command == "signin" ){
+
         std::cout << "Enter your id : ";
         std::cin >> id;
         std::cout << "Enter your password : ";
         std::cin >> password;
-        std::cout << "\033[A" << "\33[2K" << "\033[A" << "\33[2K" << std::endl;
-        while(handleEncDec(id, password));
+        if (checkUser(id, password)) {
+            std::cout << ERASE_STR << std::endl;
+            while (handleEncDec(id, password));
+        }
+        else {
+            std::cout << std::endl << "Id or password is wrong." << std::endl;
+#ifdef _WIN32
+            system("pause");
+#endif
+        }
     }
     else if( command == "gethash" ){
         std::cout << "To exit, enter 'exit' " << std::endl;
@@ -40,6 +58,13 @@ int main(){
     return 0;
 }
 
+
+bool checkUser(std::string id, std::string password) {
+    if (USER_HASH == hash_str(id.c_str()) && PASS_HASH == hash_str(password.c_str())) {
+        return true;
+    }
+    return false;
+}
 
 bool getTextFromFile(std::string filepath, std::string& text){
     std::ifstream fin;
@@ -65,7 +90,15 @@ bool writeTextToFile(std::string filepath, const std::string text){
 
 bool handleEncDec(std::string id, std::string password){
     std::string seed, filepath, filepath_out, text, command;
-    if( USER_HASH == hash_str(id.c_str()) && PASS_HASH == hash_str(password.c_str()) ){
+    
+
+#ifdef __APPLE__
+        system("clear");
+#endif // 
+#ifdef _WIN32
+        system("cls");
+#endif
+        std::cout << "Welcome back " << id << std::endl << std::endl;
 
         std::cout << "Enter a command ( enc : encrypt, dec : decrypt, exit : exit) : ";
         std::cin >> command;
@@ -129,6 +162,6 @@ bool handleEncDec(std::string id, std::string password){
             std::cout << "Wrong input." << std::endl;
         }
     
-    }
+    
     return true;
 }
