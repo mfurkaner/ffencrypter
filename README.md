@@ -1,4 +1,4 @@
-# txtencryptor
+# TXTEncryptor
 
 When using the first time, 
 
