@@ -4,6 +4,11 @@
 #include <fstream>
 #include "encrpytengine.hpp"
 
+
+#define USER_HASH 3028186019//3481592634            // default user-id hash
+#define PASS_HASH 2495492740//260277150            // default password hash
+
+
 #ifdef __APPLE__
 #define ERASE_STR "\033[A\33[2K\033[A\33[2K"
 #endif
@@ -18,9 +23,6 @@ bool checkUser(std::string id, std::string pass);
 bool getTextFromFile(std::string filepath, std::string& text);
 bool writeTextToFile(std::string filepath, const std::string text);
 bool handleEncDec(std::string id, std::string pass);
-
-#define USER_HASH 3481592634            // default user-id hash
-#define PASS_HASH 260277150            // default password hash
 
 int main(){
     std::string id, password, seed = "mountain", filepath, filepath_out, text, command;
