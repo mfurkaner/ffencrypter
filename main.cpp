@@ -40,6 +40,12 @@ int main(){
         std::cin >> password;
         if (checkUser(id, password)) {
             std::cout << ERASE_STR << std::endl;
+            #ifdef __APPLE__
+            system("clear");
+            #endif // 
+            #ifdef _WIN32
+                    system("cls");
+            #endif
             while (handleEncDec(id, password));
         }
         else {
@@ -93,13 +99,6 @@ bool writeTextToFile(std::string filepath, const std::string text){
 bool handleEncDec(std::string id, std::string password){
     std::string seed, filepath, filepath_out, text, command;
     
-
-#ifdef __APPLE__
-        system("clear");
-#endif // 
-#ifdef _WIN32
-        system("cls");
-#endif
         std::cout << "Welcome back " << id << std::endl << std::endl;
 
         std::cout << "Enter a command ( enc : encrypt, dec : decrypt, exit : exit) : ";
