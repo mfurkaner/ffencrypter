@@ -14,7 +14,7 @@
 
  std::string EncryptEngine::getEncryptedText(){
      if(enc_text == "NULL"){
-         encrypt();
+        this->encrypt();
      }
      return enc_text;
  }
@@ -31,8 +31,9 @@
 
  std::string DecryptEngine::getDecryptedText(){
      if(dec_text == "NULL"){
-         decrypt();
+        this->decrypt();
      }
      return dec_text;
  }
+ 
 
