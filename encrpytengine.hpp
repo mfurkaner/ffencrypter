@@ -1,5 +1,19 @@
 #include <iostream>
 
+#ifndef ENCRYPT_ENGINE
+#define ENCRYPT_ENGINE
+
+class EncryptedHeader{
+    std::string username;
+    std::string password;
+public:
+    EncryptedHeader(){}
+    EncryptedHeader(std::string username, std::string password) : username(username) , password(password){};
+    void setUsername(const std::string& username) { this->username = username;}
+    void setPassword(const std::string& password) { this->password = password;}
+    std::string getHeader(const std::string& id, const std::string& pass);
+};
+
 
 class EncryptEngine{
     std::string secret;
@@ -36,3 +50,5 @@ class DecryptEngine{
 
     std::string getDecryptedText();
 };
+
+#endif

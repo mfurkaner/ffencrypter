@@ -1,1 +1,7 @@
+.gitignore
 .DS_Store
+encryptengine2.cpp
+dull_dec.txt
+dull.enc
+dull.txt
+.gitignore
