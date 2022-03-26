@@ -134,7 +134,9 @@ void Application::_checkForDataLoss(){
     state = Encrypting;
     text = textholder;
     filepath = fileholder;
-    if ( FileHandler::printOnlyDifferences(check, text) ){
+    int dataloss = FileHandler::printOnlyDifferences(check, text);
+    if ( dataloss ){
+        std::cout << dataloss << " bytes lost." << std::endl;
         std::cout << "There was an error while encrypting! Please notify the dev team about this issue." << std::endl;
     }
 }

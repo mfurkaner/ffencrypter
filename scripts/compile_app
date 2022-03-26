@@ -1,0 +1,2 @@
+cd ../src
+clang++ -g main.cpp hash.cpp encryptengine.cpp application.cpp -o ../txtencrypter.out -std=c++11;
