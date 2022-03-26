@@ -81,5 +81,5 @@ int main(int argc, char* argv[]){
     denemetext = mangler.getMangledText();
     fh._writeText_ToFile(denemetext);
 
-    printDifferencesOfFiles(fin, fdec);
+    FileHandler::printDifferencesOfFiles(fin, fdec);
 }
