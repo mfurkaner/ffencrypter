@@ -1,4 +1,4 @@
-#include "application.hpp"
+#include "../inc/application.hpp"
 
 extern uint64_t hash_str(const char * s);
 

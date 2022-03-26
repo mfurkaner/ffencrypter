@@ -1,10 +1,9 @@
 #include <iostream>
 
 
-//#include "mangler.hpp"
-#include "ascii_avoid_list.hpp"
-#include "filehandler.hpp"
-#include "encrpytengine.hpp"
+#include "../inc/ascii_avoid_list.hpp"
+#include "../inc/filehandler.hpp"
+#include "../inc/encrpytengine.hpp"
 extern uint64_t hash_str(const char* s);
 
 

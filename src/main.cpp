@@ -2,7 +2,7 @@
 #include <string>
 #include <sstream>
 #include <fstream>
-#include "application.hpp"
+#include "../inc/application.hpp"
 
 int main(){
     

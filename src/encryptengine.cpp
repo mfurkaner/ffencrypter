@@ -1,5 +1,5 @@
-#include "encrpytengine.hpp"
-#include "ascii_avoid_list.hpp"
+#include "../inc/encrpytengine.hpp"
+#include "../inc/ascii_avoid_list.hpp"
 
  unsigned long long hash_str(const char* s);
  
