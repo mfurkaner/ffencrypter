@@ -3,10 +3,20 @@
 const unsigned char ASCII_AVOID_LIST[] = {0, 1, 2, 3, 4, 5, 6, 8, 
                                  16, 17, 18, 19, 20, 21, 
                                  23, 24, 25, 26, 27, 28, 
-                                 29, 30, 31, 127, 129, 
-                                 141, 143, 144, 157};
+                                 29, 30, 31 };
 
 #define AVOID_LIST_SIZE sizeof(ASCII_AVOID_LIST)/sizeof(char)
+
+inline bool does_have_avoid_element(const std::string& str){
+    for(int i = 0 ; i < str.size() ; i++){
+        for(int j = 0; j < AVOID_LIST_SIZE ; j++){
+            if( ASCII_AVOID_LIST[j] == str.at(i)){
+                std::cout << "Found an avoid char at " << i << " with value " << ASCII_AVOID_LIST[j] << std::endl;
+            }
+        }
+    }
+    return true;
+}
 
 inline uint8_t jump_avoid_elements_right(uint8_t c, uint8_t shift_amount){
     if ( !shift_amount ) return 0;

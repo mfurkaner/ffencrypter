@@ -32,38 +32,54 @@ int main(int argc, char* argv[]){
     std::cout << "After right : " << right << std::endl;
     */
     FileHandler fh;
+    std::string fin = "../deneme.txt", fmid = "ali.enc", fdec = "../ali.txt", fmen = "../men.txt";
     std::string denemetext, text;
-    fh.setFilePath("../a.txt");
-    fh.getTextFromFile(denemetext);
-    text = denemetext;
-
-    EncryptEngine ee(text, "ali", "erfurkan");
-    text = ee.getEncryptedText();
-    ee.setSeed("atabaksanaAQ");
-    text = ee.getEncryptedText();
-    std::cout << "after enc "<< text.size() << std::endl;
-
-    FurkanMangler mangler(text, hash_str("erfurkan"));
-    text = mangler.getMangledText();
-    std::cout << "after mang "<< text.size() << std::endl;
-
-    fh.setFilePath("../denemeout.txt");
-    fh.writeTextToFile(text);
-    std::cout << "after write "<<text.size() << std::endl;
-
+    fh.setFilePath(fin);
     fh.getTextFromFile(text);
-    std::cout << "after get "<<text.size() << std::endl;
+    does_have_avoid_element(text);
+    denemetext = text;
+
+    std::string id = "furkan";
+    std::string pass = "er";
+    std::string secret = pass + id;
+    std::string seed1 = "aliatabak";
+    std::string seed2 = "furkey";
+
+    EncryptEngine ee(text, seed1, secret);
+    text = ee.getEncryptedText();
+    ee.reset();
+    ee.setSeed(seed2);
+    ee.setText(text);
+    text = ee.getEncryptedText();
+
+    FurkanMangler mangler(text, hash_str(secret.c_str()));
+    text = mangler.getMangledText();
+
+    fh.setFilePath(fmid);
+    fh._writeText_ToFile(text);
+    fh.getTextFromFile(text);
+    //does_have_avoid_element(text);
+    //printDifferences(text, denemetext);
 
     mangler.setText(text);
     text = mangler.getUnmangledText();
-    std::cout << "after unmeng "<< text.size() << std::endl;
 
-    DecryptEngine de(text, "ali", "erfurkan");
+    DecryptEngine de(text, seed1, secret);
     text = de.getDecryptedText();
-    de.setSeed("atabaksanaAQ");
+    de.reset();
+    de.setSeed(seed2);
+    de.setText(text);
     text = de.getDecryptedText();
+    does_have_avoid_element(text);
 
 
-    std::cout << denemetext.size() << " " << text.size() << std::endl;
-    fh.writeTextToFile(text);
+    fh.setFilePath(fdec);
+    fh._writeText_ToFile(text);
+
+    fh.setFilePath(fmen);
+    mangler.setText(denemetext);
+    denemetext = mangler.getMangledText();
+    fh._writeText_ToFile(denemetext);
+
+    printDifferencesOfFiles(fin, fdec);
 }
