@@ -1,7 +1,10 @@
 #include <iostream>
 
+
 #ifndef ENCRYPT_ENGINE
 #define ENCRYPT_ENGINE
+#include "mangler.hpp"
+
 
 class EncryptedHeader{
     std::string username;
@@ -15,37 +18,39 @@ public:
 };
 
 
-class EncryptEngine{
+class BaseEngine{
+protected:
+    FurkanMangler mangler;
     std::string secret;
     std::string seed;
     std::string text;
-    std::string enc_text = "NULL";
 
+    BaseEngine(std::string text, std::string seed, std::string secret) : text(text),seed(seed),secret(secret) {}
+
+    uint8_t _getCeasarShiftedChar(uint8_t c, const uint64_t& shift_amount, bool to_right);
     public:
-    EncryptEngine(std::string text, std::string seed, std::string secret) : text(text),seed(seed),secret(secret) {}
-
     void setSeed(std::string seed) {this->seed = seed;}
     void setText(std::string text) {this->text = text;}
     void setSecret(std::string secret) {this->secret = secret;}
+};
 
+
+class EncryptEngine : public BaseEngine{
+    
+    std::string enc_text = "NULL";
+
+    public:
+    EncryptEngine(std::string text, std::string seed, std::string secret) : BaseEngine(text, seed, secret){}
     void encrypt();
 
     std::string getEncryptedText();
 };
 
-class DecryptEngine{
-    std::string secret;
-    std::string seed;
-    std::string text;
+class DecryptEngine : public BaseEngine{
     std::string dec_text = "NULL";
 
     public:
-    DecryptEngine(std::string text, std::string seed, std::string secret) : text(text),seed(seed),secret(secret) {}
-
-    void setSeed(std::string seed) {this->seed = seed;}
-    void setText(std::string text) {this->text = text;}
-    void setSecret(std::string secret) {this->secret = secret;}
-
+    DecryptEngine(std::string text, std::string seed, std::string secret) : BaseEngine(text, seed, secret) {}
     void decrypt();
 
     std::string getDecryptedText();

@@ -1,5 +1,6 @@
 #include "encrpytengine.hpp"
 #include "filehandler.hpp"
+#include "mangler.hpp"
 
 #ifndef APPLICATION
 #define APPLICATION
@@ -8,12 +9,12 @@ enum State{
 };
 
 class Application{
+    State state;
     FileHandler fileHandler;
     EncryptedHeader header;
     std::string filepath;
     std::string fileout;
     std::string id, password;
-    State state;
     std::string text;
     std::string header_in_txt;
 

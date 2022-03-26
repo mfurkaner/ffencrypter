@@ -14,6 +14,7 @@ public:
     void setFilePath(const std::string& path){ filepath = path;}
 
     bool getTextFromFile(std::string& text){
+        text = "";
         std::ifstream fin;
         fin.open(filepath, std::ios::in);
         std::string line;

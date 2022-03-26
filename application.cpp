@@ -1,6 +1,6 @@
 #include "application.hpp"
 
-
+extern uint64_t hash_str(const char * s);
 
 bool Application::checkAuthentication(){
     bool result = header_in_txt == header.getHeader(id, password);
@@ -10,17 +10,23 @@ bool Application::checkAuthentication(){
 bool Application::readText(){
     fileHandler.setFilePath(filepath);
     std::string text_and_header;
+    header_in_txt = ""; 
     if ( !fileHandler.getTextFromFile(text_and_header) ) return false; 
+    /*
     if ( state == Decripting ){
-        header_in_txt = text_and_header.substr(0, header.getHeader(id, password).length() );
+        std::string hdr = header.getHeader(id, password);
+        header_in_txt = text_and_header.substr(0, hdr.length() );
     }
+    
     text = text_and_header.substr(header_in_txt.length());
+    */
+    text = text_and_header;
     return true;
 }
 
 bool Application::writeText(const std::string& out){
     fileHandler.setFilePath(fileout);
-    if ( state == Encrypting ) return fileHandler.writeTextToFile(header.getHeader(id, password) + out);
+    if ( state == Encrypting ) return fileHandler.writeTextToFile(/*header.getHeader(id, password) +*/ out);
     return fileHandler.writeTextToFile(out);
 }
 
@@ -55,8 +61,10 @@ void Application::handleEncryption(){
             encrypted = e_engine.getEncryptedText();
         }
         if( encrypted.find('\0') != std::string::npos || encrypted.find(3) != std::string::npos ){
-            std::cout << "Cannot ensure no data loss with these seeds!" << encrypted.find('\0') << "    " << encrypted.find(3) << std::endl;
+            std::cout << "Cannot ensure no data loss with these seeds!  " << encrypted.find('\0') << "    " << encrypted.find(3) << std::endl;
         }
+        FurkanMangler mangler(encrypted, hash_str((password + id).c_str()));
+        encrypted = mangler.getMangledText();
         if( !writeText(encrypted) ){
             std::cout << "Couldn't open " << fileout << std::endl;
         }
@@ -79,9 +87,10 @@ void Application::handleDecryption(){
     if( !readText() ){
         std::cout << "Couldn't open " << filepath << std::endl;
     }
+    /*
     else if ( !checkAuthentication() ) {
         std::cout << "You are not authorized to decrypt this file." << std::endl;
-    }
+    }*/
     else{
         std::cout << "Enter the output file path (to leave it as default enter '.' ): ";
         std::cin >> fileout;
@@ -91,6 +100,8 @@ void Application::handleDecryption(){
             }
         }
         std::string decrypted = text;
+        FurkanMangler mangler(decrypted, hash_str((password + id).c_str()));
+        decrypted = mangler.getUnmangledText();
         std::cout << "Layers of decryption : ";
         std::cin >> number;
         if(number != ""){
