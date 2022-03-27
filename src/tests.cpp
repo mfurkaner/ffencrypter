@@ -55,7 +55,7 @@ int main(int argc, char* argv[]){
     text = mangler.getMangledText();
 
     fh.setFilePath(fmid);
-    fh._writeText_ToFile(text);
+    fh.writeTextToFile(text);
     fh.getTextFromFile(text);
     //does_have_avoid_element(text);
     //printDifferences(text, denemetext);
@@ -73,12 +73,12 @@ int main(int argc, char* argv[]){
 
 
     fh.setFilePath(fdec);
-    fh._writeText_ToFile(text);
+    fh.writeTextToFile(text);
 
     fh.setFilePath(fmen);
     mangler.setText(denemetext);
     denemetext = mangler.getMangledText();
-    fh._writeText_ToFile(denemetext);
+    fh.writeTextToFile(denemetext);
 
     FileHandler::printDifferencesOfFiles(fin, fdec);
 }

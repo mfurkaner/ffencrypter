@@ -16,7 +16,7 @@ public:
     bool getTextFromFile(std::string& text){
         text = "";
         std::ifstream fin;
-        fin.open(filepath, std::ios::in);
+        fin.open(filepath, std::ios::in | std::ios::binary);
         std::string line;
         if(fin.fail()) return false;
         while( !fin.eof() ){
@@ -26,9 +26,9 @@ public:
         fin.close();
         return true;
     }
-    bool _writeText_ToFile(const std::string& text){
+    bool writeTextToFile(const std::string& text){
         std::ofstream fout;
-        fout.open(filepath, std::ios::out);
+        fout.open(filepath, std::ios::out | std::ios::binary);
         if(fout.fail()) return false;
         fout << text;
         fout.close();

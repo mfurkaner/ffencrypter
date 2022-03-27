@@ -25,8 +25,8 @@ bool Application::_readText_(){
 
 bool Application::_writeText_(const std::string& out){
     fileHandler.setFilePath(fileout);
-    if ( state == Encrypting ) return fileHandler._writeText_ToFile(header.getHeader(id, password) + out);
-    return fileHandler._writeText_ToFile(out);
+    if ( state == Encrypting ) return fileHandler.writeTextToFile(header.getHeader(id, password) + out);
+    return fileHandler.writeTextToFile(out);
 }
 
 bool Application::_handleReading(){
