@@ -29,17 +29,15 @@
  }
 
  void EncryptEngine::encrypt(){
-     if ( seed.length() == 0 ){
+     if ( seed.length() == 0 || text.length() == 0 ){
          return;
      }
      std::string secretAndSeed = secret + seed;
-     unsigned long long secret_hash = hash_str(secretAndSeed.c_str()) ;
+     uint64_t secret_hash = hash_str(secretAndSeed.c_str()) ;
      std::string encrypted;
      for(int i = 0; i < text.length() ; i++){
-         //encrypted += (text.at(i) + (seed.at( i % seed.length() ) * secret_hash)) % 256;
          uint64_t shift_amount = seed.at( i % seed.length() ) * secret_hash ;
-         char add = _getCeasarShiftedChar(text.at(i), shift_amount, true);
-         encrypted += add;
+         encrypted += _getCeasarShiftedChar(text.at(i), shift_amount, true);
          if ( encrypted[i] == '\0'){
              std::cout << "PANIC" << std::endl;
          }
@@ -57,7 +55,7 @@
 
 
  void DecryptEngine::decrypt(){
-     if (seed.length() == 0 ){
+     if (seed.length() == 0 || text.length() == 0){
          return;
      }
      std::string secretAndSeed = secret + seed;
@@ -65,8 +63,7 @@
      std::string decrpyted;
      for(int i = 0; i < text.length() ; i++){
          uint64_t shift_amount = seed.at( i % seed.length() ) * secret_hash ;
-         char add = _getCeasarShiftedChar(text.at(i), shift_amount, false);
-         decrpyted += add;
+         decrpyted += _getCeasarShiftedChar(text.at(i), shift_amount, false);;
      }
      dec_text = decrpyted;
  }
@@ -77,5 +74,3 @@
      }
      return dec_text;
  }
- 
-
