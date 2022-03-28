@@ -16,8 +16,8 @@ class Application{
     std::string fileout;
     std::string id, password;
     std::string text;
-    std::vector<std::string> seeds;
     std::string header_in_txt;
+    std::vector<std::string> seeds;
     bool mangling = true;
 
     bool _checkAuthentication_();
@@ -44,6 +44,8 @@ class Application{
 
     void printWelcomeMessage();
     void printExitMessage();
+
+    void reset();
 public:
     void Run();
 

@@ -10,7 +10,7 @@ bool Application::_checkAuthentication_(){
 bool Application::_readText_(){
     fileHandler.setFilePath(filepath);
     std::string text_and_header;
-    header_in_txt = ""; 
+    header_in_txt = "";
 
     if ( !fileHandler.getTextFromFile(text_and_header) ) return false; 
     
@@ -198,12 +198,26 @@ bool Application::handleCommand(){
     return true;
 }
 
+void Application::reset(){
+    filepath = "";
+    fileout = "";
+    id = "";
+    password = "";
+    text = "";
+    header_in_txt = "";
+    fileHandler = FileHandler();
+    seeds.clear();
+    mangling = true;
+}
+
 void Application::Run(){
     printWelcomeMessage();
 
     while (handleCommand());
 
     printExitMessage();
+
+    reset();
 }
 
 void Application::printWelcomeMessage(){}

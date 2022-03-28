@@ -1,2 +1,3 @@
 cd ../src
-clang++ -g tests.cpp hash.cpp encryptengine.cpp application.cpp -o ../test.out -std=c++11;
+clang++ -g tests.cpp hash.cpp encryptengine.cpp application.cpp -o ../test.out -std=c++11
+cd ../scripts
