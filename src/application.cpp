@@ -44,7 +44,8 @@ bool Application::_handleReading(){
 }
 
 bool Application::_handleWriting(const std::string& out){
-    if( !_writeText_(out) ){
+
+    if( !check_for_data_loss && !_writeText_(out) ){
         std::cout << "Couldn't open " << fileout << std::endl;
         return false;
     }
@@ -52,16 +53,16 @@ bool Application::_handleWriting(const std::string& out){
     return true;
 }
 
-void Application::_handleMangling(std::string& text){
+void Application::_handleMangling(std::string& text_to_mangle){
     if ( !mangling ) return;
-    FurkanMangler mangler(text, hash_str((password + id).c_str()));
-    text = mangler.getMangledText();
+    FurkanMangler mangler(text_to_mangle, hash_str((password + id).c_str()));
+    text_to_mangle = mangler.getMangledText();
 }
 
-void Application::_handleUnmangling(std::string& text){
+void Application::_handleUnmangling(std::string& text_to_unmangle){
     if ( !mangling ) return;
-    FurkanMangler mangler(text, hash_str((password + id).c_str()));
-    text = mangler.getUnmangledText();
+    FurkanMangler mangler(text_to_unmangle, hash_str((password + id).c_str()));
+    text_to_unmangle = mangler.getUnmangledText();
 }
 
 void Application::_getCretentials(){
@@ -116,7 +117,11 @@ void Application::_Decrypt(std::string& str, int num){
     }
 }
 
-void Application::_checkForDataLoss(){
+bool Application::_checkForDataLoss(const std::string& out){
+
+    if ( !check_for_data_loss ) return true;
+    if ( !_writeText_(out) ) {std::cout << "Data loss check could not be initiated due to a write issue." << std::endl; return false;}
+
     std::string check;
     std::string fileholder = filepath;
     filepath = fileout;
@@ -139,6 +144,7 @@ void Application::_checkForDataLoss(){
         std::cout << dataloss << " bytes lost." << std::endl;
         std::cout << "There was an error while encrypting! Please notify the dev team about this issue." << std::endl;
     }
+    return !dataloss;
 }
 
 
@@ -148,9 +154,9 @@ void Application::handleEncryption(){
     _getCretentials();
     _getOutputPath();
     _Encrypt(encrypted, _getLayerNumber());
-    _checkForDataLoss();
     _handleMangling(encrypted);
-    _handleWriting(encrypted);
+    bool nodataloss = _checkForDataLoss(encrypted);
+    if (nodataloss) _handleWriting(encrypted);
 }
 
 void Application::handleDecryption(){

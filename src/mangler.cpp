@@ -1,6 +1,6 @@
 #include <string>
 #include <vector>
-#include "mangler.hpp"
+#include "../inc/mangler.hpp"
 
 extern uint64_t hash_str_ign_char_order(const char* s);
 
@@ -22,10 +22,11 @@ std::string Mangler::getMangledText(){
 
 std::string Mangler::getUnmangledText(){
     mangledText = text;
+    _unmangle(mangledText);
     return mangledText;
 }
 
-void FurkanMangler::_shift(std::string& str, size_t amount, bool to_right = true){
+void FurkanMangler::_shift(std::string& str, size_t amount, bool to_right){
     std::string shifted = "";
 
     for(int i = 0; i < str.size(); i++){

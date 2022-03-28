@@ -19,16 +19,17 @@ class Application{
     std::string header_in_txt;
     std::vector<std::string> seeds;
     bool mangling = true;
+    bool check_for_data_loss = true;
 
     bool _checkAuthentication_();
 
     bool _readText_();
     bool _writeText_(const std::string& out);
 
-    void _checkForDataLoss();
+    bool _checkForDataLoss(const std::string& out);
 
-    void _handleMangling(std::string& text);
-    void _handleUnmangling(std::string& text);
+    void _handleMangling(std::string& text_to_mangle);
+    void _handleUnmangling(std::string& text_to_unmangle);
     bool _handleReading();
     bool _handleWriting(const std::string& out);
 
