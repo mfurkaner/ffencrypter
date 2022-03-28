@@ -1,6 +1,8 @@
 #include <string>
 #include <vector>
 
+extern uint64_t hash_str_ign_char_order(const char* s);
+
 #ifndef MANGLER
 #define MANGLER
 
@@ -50,6 +52,20 @@ class FurkanMangler : public Mangler{
 public:
     FurkanMangler(){}
     FurkanMangler(const std::string& text, uint64_t hash) : Mangler(text, hash) {}
+    static void _shift(std::string& str, size_t amount, bool to_right = true){
+        std::string shifted = "";
+
+        for(int i = 0; i < str.size(); i++){
+            if (to_right){
+                shifted += str[ i - amount + ( i < amount  ? str.size() : 0 ) ];
+            }
+            else{
+                shifted += str[ i + amount - ( i + amount < str.size()  ? 0 : str.size() ) ];
+            }
+        }
+
+        str = shifted;
+    }
 protected:
     void _mangle(std::string& str){
 
@@ -90,6 +106,7 @@ protected:
         _unmangleSubStrings(subStrings);
         str = _concatStrings(subStrings);
     }
+
 private:
     static size_t _getMaxPrimeDivider(size_t count){
         for ( int i = count/2 ; i >= 2 ; i--){
@@ -106,7 +123,7 @@ private:
     }
 
     void _mangleSmallestSection(std::string& str){
-        size_t shift_amount = hash % str.size();
+        size_t shift_amount = ( hash_str_ign_char_order(str.c_str()) * hash ) % str.size();
         _shift(str, shift_amount, true);
     }
 
@@ -116,7 +133,7 @@ private:
     }
 
     void _unmangleSmallestSection(std::string& str){
-        size_t shift_amount = hash % str.size();
+        size_t shift_amount = ( hash_str_ign_char_order(str.c_str()) * hash ) % str.size();
         _shift(str, shift_amount, false);
     }
 
@@ -133,21 +150,6 @@ private:
             shifted.push_back(var);
         }
         subStrings = shifted;
-    }
-
-    void _shift(std::string& str, size_t amount, bool to_right){
-        std::string shifted = "";
-
-        for(int i = 0; i < str.size(); i++){
-            if (to_right){
-                shifted += str[ i - amount + ( i < amount  ? str.size() : 0 ) ];
-            }
-            else{
-                shifted += str[ i + amount - ( i + amount < str.size()  ? 0 : str.size() ) ];
-            }
-        }
-
-        str = shifted;
     }
 
     std::string _concatStrings(const std::vector<std::string>& subStrings){

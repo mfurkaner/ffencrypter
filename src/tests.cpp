@@ -1,10 +1,16 @@
+#include <ios>
 #include <iostream>
+#include <string>
+#include <assert.h>
 
 
 #include "../inc/ascii_avoid_list.hpp"
 #include "../inc/filehandler.hpp"
 #include "../inc/encrpytengine.hpp"
+
 extern uint64_t hash_str(const char* s);
+extern uint64_t hash_str_ign_char_order(const char* s);
+extern void hash_str_ign_char_order_test();
 
 
 int main(int argc, char* argv[]){
@@ -30,6 +36,9 @@ int main(int argc, char* argv[]){
     std::cout << "After left : " << left << std::endl;
     std::cout << "After right : " << right << std::endl;
     */
+
+
+    /*
     FileHandler fh;
     std::string fin = "../deneme.txt", fmid = "ali.enc", fdec = "../ali.txt", fmen = "../men.txt";
     std::string denemetext, text;
@@ -81,4 +90,8 @@ int main(int argc, char* argv[]){
     fh.writeTextToFile(denemetext);
 
     FileHandler::printDifferencesOfFiles(fin, fdec);
+    */
+
+    hash_str_ign_char_order_test();
+
 }
