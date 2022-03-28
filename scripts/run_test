@@ -1,4 +1,4 @@
 cd ../src
-g++ -g tests.cpp hash.cpp encryptengine.cpp application.cpp -o ../test.out -std=c++11;
+g++ -g tests.cpp hash.cpp encryptengine.cpp mangler.cpp application.cpp -o ../test.out -std=c++11;
 cd ..
 ./test.out                             

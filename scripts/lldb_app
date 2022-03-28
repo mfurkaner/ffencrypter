@@ -1,4 +1,4 @@
 cd ../src
-g++ -g main.cpp hash.cpp encryptengine.cpp application.cpp -o ../txtencrypter.out -std=c++11
+g++ -g main.cpp hash.cpp encryptengine.cpp mangler.cpp application.cpp -o ../txtencrypter.out -std=c++11
 cd ..
 lldb txtencrypter.out
