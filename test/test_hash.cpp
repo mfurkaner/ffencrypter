@@ -17,10 +17,10 @@ void hash_str_ign_char_order_test(){
         num--;
         FurkanMangler::_shift(teststring, 1, true);
         bool state = init_hash == hash_str_ign_char_order(teststring.c_str());
-        assert(state);
+        assert(state && "Shifted string doesn't have the same hash.");
         teststring[0]++;
         state = init_hash != hash_str_ign_char_order(teststring.c_str());
-        assert(state);
+        assert(state && "Different strings have the same hash.");
         teststring[0]--;
     }
     std::cout << "\t[SUCCESS] : hash_str_ign_char_order(const char*)" << std::endl;
