@@ -3,7 +3,7 @@
 This software now supports multiple encryption layers! <br />
 
 When using the first time, <br />
--> use bash scripts in scripts/ directory. 
+-> use bash scripts in scripts/ directory. <br />
 -> i use clang, if you want to use gcc, change clang++ to g++ <br />
 
 To encrypt a file <br />
