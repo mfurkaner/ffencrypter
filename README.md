@@ -24,3 +24,11 @@ To decrypt a file <br />
 -> enter a path for the decrypted output file  ( enter '.' to use default path ) <br />
 -> enter how many layers of encryption you want <br />
 -> enter the seed for each decryption layer <br />
+
+To find and print out differences between two files <br />
+
+-> use pdif command <br />
+
+To change the run settings ( Not implemented yet ) <br />
+
+-> use settings command <br />
