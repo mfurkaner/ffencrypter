@@ -1,25 +1,21 @@
 #include "encryptengine.hpp"
 #include "filehandler.hpp"
 #include "mangler.hpp"
+#include "configuration.hpp"
 
 #ifndef APPLICATION
 #define APPLICATION
 enum State{
-    Reading, Encrypting, Decripting
+    Reading, Encrypting, Decrypting
 };
 
 class Application{
+    ApplicationConfiguration _configuration;
     State state;
     FileHandler fileHandler;
     EncryptedHeader header;
-    std::string filepath;
-    std::string fileout;
-    std::string id, password;
     std::string text;
     std::string header_in_txt;
-    std::vector<std::string> seeds;
-    bool mangling = true;
-    bool check_for_data_loss = true;
 
     bool _checkAuthentication_();
 
@@ -48,6 +44,9 @@ class Application{
 
     void reset();
 public:
+    Application(const std::string& config_path) : _configuration(config_path){}
+    Application(const ApplicationConfiguration& configuration) : _configuration(configuration){}
+    
     void Run();
 
 };

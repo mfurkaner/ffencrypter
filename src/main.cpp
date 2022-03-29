@@ -6,7 +6,7 @@
 
 int main(){
     
-    Application App;
+    Application App("");
     App.Run();
 
     return 0;

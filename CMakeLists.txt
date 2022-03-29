@@ -15,6 +15,7 @@ set(SRC
     src/encryptengine.cpp 
     src/hash.cpp
     src/filehandler.cpp
+    src/configuration.cpp
 )
 
 set(INC
@@ -23,6 +24,7 @@ set(INC
     inc/encryptengine.hpp 
     inc/filehandler.hpp
     inc/mangler.hpp 
+    inc/configuration.hpp
 )
 
 include_directories(inc)

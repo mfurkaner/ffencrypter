@@ -3,19 +3,19 @@
 extern uint64_t hash_str(const char * s);
 
 bool Application::_checkAuthentication_(){
-    bool result = header_in_txt == header.getHeader(id, password);
+    bool result = header_in_txt == header.getHeader(_configuration.getID(), _configuration.getPassword());
     return result;
 }
 
 bool Application::_readText_(){
-    fileHandler.setFilePath(filepath);
+    fileHandler.setFilePath(_configuration.getFilePath());
     std::string text_and_header;
     header_in_txt = "";
 
     if ( !fileHandler.getTextFromFile(text_and_header) ) return false; 
     
-    if ( state == Decripting ){
-        std::string hdr = header.getHeader(id, password);
+    if ( state == Decrypting ){
+        std::string hdr = header.getHeader(_configuration.getID(), _configuration.getPassword());
         header_in_txt = text_and_header.substr(0, hdr.length() );
     }
 
@@ -24,19 +24,21 @@ bool Application::_readText_(){
 }
 
 bool Application::_writeText_(const std::string& out){
-    fileHandler.setFilePath(fileout);
-    if ( state == Encrypting ) return fileHandler.writeTextToFile(header.getHeader(id, password) + out);
+    fileHandler.setFilePath(_configuration.getFileOut());
+    if ( state == Encrypting ) return fileHandler.writeTextToFile(header.getHeader(_configuration.getID(), _configuration.getPassword()) + out);
     return fileHandler.writeTextToFile(out);
 }
 
 bool Application::_handleReading(){
+    std::string filepath;
     std::cout << "Enter the file path : ";
     std::cin >> filepath;
+    _configuration.setFilePath(filepath);
     if( !_readText_() ){
         std::cout << "Couldn't open " << filepath << std::endl;
         return false;
     }
-    if ( state == Decripting && !_checkAuthentication_()){
+    if ( state == Decrypting && !_checkAuthentication_()){
         std::cout << "You are not authorized to decrypt this file." << std::endl;
         return false;
     }
@@ -45,49 +47,55 @@ bool Application::_handleReading(){
 
 bool Application::_handleWriting(const std::string& out){
 
-    if( !check_for_data_loss && !_writeText_(out) ){
-        std::cout << "Couldn't open " << fileout << std::endl;
+    if( !_configuration.isDataLossCheckEnabled() && !_writeText_(out) ){
+        std::cout << "Couldn't open " << _configuration.getFileOut() << std::endl;
         return false;
     }
-    std::cout << filepath << " is " << (state == Encrypting ? "encypted" : "decrypted" ) << " and written to \'" << fileout << "\'" << std::endl;
+    std::cout << _configuration.getFilePath() << " is " << (state == Encrypting ? "encypted" : "decrypted" ) << " and written to \'" << _configuration.getFileOut() << "\'" << std::endl;
     return true;
 }
 
 void Application::_handleMangling(std::string& text_to_mangle){
-    if ( !mangling ) return;
-    FurkanMangler mangler(text_to_mangle, hash_str((password + id).c_str()));
+    if ( !_configuration.isManglingEnabled() ) return;
+    FurkanMangler mangler(text_to_mangle, hash_str((_configuration.getPassword() + _configuration.getID()).c_str()));
     text_to_mangle = mangler.getMangledText();
 }
 
 void Application::_handleUnmangling(std::string& text_to_unmangle){
-    if ( !mangling ) return;
-    FurkanMangler mangler(text_to_unmangle, hash_str((password + id).c_str()));
+    if ( !_configuration.isManglingEnabled()  ) return;
+    FurkanMangler mangler(text_to_unmangle, hash_str((_configuration.getPassword() + _configuration.getID()).c_str()));
     text_to_unmangle = mangler.getUnmangledText();
 }
 
 void Application::_getCretentials(){
+    std::string id, password;
     std::cout << "Enter the id of encrypter: ";
     std::cin >> id;
     std::cout << "Enter the encryption password : ";
     std::cin >> password;
+    _configuration.setID(id);
+    _configuration.setPassword(password);
 }
 
 void Application::_getOutputPath(){
+    std::string fileout;
     std::cout << "Enter the output file path (to leave it as default enter '.' ): ";
     std::cin >> fileout;
+    _configuration.setFileOut(fileout);
     if (fileout == "."){
+        std::string filepath = _configuration.getFilePath();
         if ( state == Encrypting){
-            fileout = filepath.substr(0, filepath.find_last_of('.')) + ".enc";
+            _configuration.setFileOut( filepath.substr(0, filepath.find_last_of('.')) + ".enc" );
         }
         else if(filepath.find(".enc")){
-            fileout = filepath.substr(0, filepath.find_last_of('.')) + "_dec" + ".txt";
+            _configuration.setFileOut( filepath.substr(0, filepath.find_last_of('.')) + "_dec" + ".txt" );
         }
     }
 }
 
 int Application::_getLayerNumber(){
     std::string number;
-    int num = 0;
+    uint32_t num = 0;
     std::cout << "Layers of encryption : ";
     std::cin >> number;
     if(number != ""){
@@ -101,8 +109,8 @@ void Application::_Encrypt(std::string& str, int num){
         std::cout << "Enter a seed : ";
         std::string seed;
         std::cin >> seed;
-        seeds.push_back(seed);
-        EncryptEngine e_engine(str, seed, password + id);
+        _configuration.addSeed(seed);
+        EncryptEngine e_engine(str, seed, _configuration.getPassword() + _configuration.getID());
         str = e_engine.getEncryptedText();
     }
 }
@@ -112,34 +120,30 @@ void Application::_Decrypt(std::string& str, int num){
         std::cout << "Enter a seed : ";
         std::string seed;
         std::cin >> seed;
-        DecryptEngine d_engine(str, seed, password + id);
+        DecryptEngine d_engine(str, seed, _configuration.getPassword() + _configuration.getID());
         str = d_engine.getDecryptedText();
     }
 }
 
 bool Application::_checkForDataLoss(const std::string& out){
 
-    if ( !check_for_data_loss ) return true;
+    if ( !_configuration.isDataLossCheckEnabled() ) return true;
     if ( !_writeText_(out) ) {std::cout << "Data loss check could not be initiated due to a write issue." << std::endl; return false;}
-
-    std::string check;
-    std::string fileholder = filepath;
-    filepath = fileout;
+    _configuration.reverseFilePaths();
     std::string textholder = text;
-    state = Decripting;
+    state = Decrypting;
     if ( _readText_() ){
-        check = text;
-        _handleUnmangling(check);
-        for (std::string seed : seeds)
+        _handleUnmangling(text);
+        for (std::string seed : _configuration.getSeeds())
         {
-            DecryptEngine de(check, seed, password + id);
-            check = de.getDecryptedText();
+            DecryptEngine de(text, seed, _configuration.getPassword() + _configuration.getID());
+            text = de.getDecryptedText();
         }
     }
     state = Encrypting;
+    _configuration.reverseFilePaths();
+    uint32_t dataloss = FileHandler::printOnlyDifferences(textholder, text);
     text = textholder;
-    filepath = fileholder;
-    int dataloss = FileHandler::printOnlyDifferences(check, text);
     if ( dataloss ){
         std::cout << dataloss << " bytes lost." << std::endl;
         std::cout << "There was an error while encrypting! Please notify the dev team about this issue." << std::endl;
@@ -180,7 +184,7 @@ bool Application::handleCommand(){
         handleEncryption();
     }
     else if ( command == "dec" ){
-        state = Decripting;
+        state = Decrypting;
         handleDecryption();
     }
     else if ( command == "pdif" ){
@@ -205,15 +209,10 @@ bool Application::handleCommand(){
 }
 
 void Application::reset(){
-    filepath = "";
-    fileout = "";
-    id = "";
-    password = "";
+    _configuration.clear();
     text = "";
     header_in_txt = "";
     fileHandler = FileHandler();
-    seeds.clear();
-    mangling = true;
 }
 
 void Application::Run(){
