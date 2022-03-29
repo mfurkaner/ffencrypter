@@ -12,7 +12,7 @@ protected:
     virtual bool _getConfig() = 0;
 public:
     Configuration(){}
-    Configuration(const std::string& config_path) : _config_path(config_path){}
+    Configuration(const std::string& config_path) : _config_path(config_path){_fileHandler.setFilePath(config_path);}
 };
 
 
@@ -55,6 +55,13 @@ public:
 
     void clear();
 
+};
+
+enum ConfigurationIndex{
+    filepath_, fileout_, id_, pass_, seed_,
+    mangling_, datalosscheck_,
+
+    endofconfig
 };
 
 #endif

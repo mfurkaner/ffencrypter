@@ -27,6 +27,8 @@ set(INC
     inc/configuration.hpp
 )
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ../../)
+
 include_directories(inc)
 
-add_executable(TXTencrypter ${INC} ${SRC})
+add_executable(TXTencrypter_dbg ${INC} ${SRC})
