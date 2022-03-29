@@ -3,8 +3,8 @@
 This software now supports multiple encryption layers! <br />
 
 When using the first time, <br />
--> use bash scripts in scripts/ directory. <br />
--> i use clang, if you want to use gcc, change clang++ to g++ <br />
+-> install cmake to build and run the app
+-> use bash scripts in scripts/ directory for convenience. <br />
 
 To encrypt a file <br />
 <br />
