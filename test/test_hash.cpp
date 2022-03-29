@@ -1,6 +1,6 @@
 #include <assert.h>
 #include <iostream>
-#include "../inc/encrpytengine.hpp"
+#include "../inc/encryptengine.hpp"
 extern uint64_t hash_str(const char* s);
 extern uint64_t hash_str_ign_char_order(const char* s);
 

@@ -37,7 +37,7 @@ public:
 
     static int printOnlyDifferences(const std::string& t1, const std::string& t2){
         int count = 0;
-        for(int i = 0; i < t1.size() && i < t2.size() ; i++){
+        for(uint32_t i = 0; i < t1.size() && i < t2.size() ; i++){
             if( t1.at(i) != t2.at(i) ){
                 std::cout << "They differ at " << i << " : t1=" << t1.at(i) << " t2=" << t2.at(i) << std::endl; 
                 count++;

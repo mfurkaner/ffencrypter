@@ -6,7 +6,7 @@ extern uint64_t hash_str_ign_char_order(const char* s);
 
 bool Mangler::is_prime(size_t num){
     if (num <= 1)   return false;
-    for(int i = 2; i <= num / 2; i++) {
+    for(uint32_t i = 2; i <= num / 2; i++) {
         if(num % i == 0) {
             return false;
         }
@@ -29,7 +29,7 @@ std::string Mangler::getUnmangledText(){
 void FurkanMangler::_shift(std::string& str, size_t amount, bool to_right){
     std::string shifted = "";
 
-    for(int i = 0; i < str.size(); i++){
+    for(uint32_t i = 0; i < str.size(); i++){
         if (to_right){
             shifted += str[ i - amount + ( i < amount  ? str.size() : 0 ) ];
         }
@@ -82,7 +82,7 @@ void FurkanMangler::_unmangle(std::string& str){
 }
 
 size_t FurkanMangler::_getMaxPrimeDivider(size_t count){
-    for ( int i = count/2 ; i >= 2 ; i--){
+    for ( uint32_t i = count/2 ; i >= 2 ; i--){
         if( count % i == 0 && is_prime(i) ){
             return i;
         }
@@ -112,7 +112,7 @@ void FurkanMangler::_unmangleSmallestSection(std::string& str){
 
 void FurkanMangler::_shift(std::vector<std::string>& subStrings, size_t amount, bool to_right){
     std::vector<std::string> shifted;
-    for(int i = 0; i < subStrings.size(); i++){
+    for(uint32_t i = 0; i < subStrings.size(); i++){
         std::string var;
         if (to_right){
             var = subStrings[ i - amount + ( i < amount  ? subStrings.size() : 0 )] ;
@@ -127,7 +127,7 @@ void FurkanMangler::_shift(std::vector<std::string>& subStrings, size_t amount, 
 
 std::string FurkanMangler::_concatStrings(const std::vector<std::string>& subStrings){
     std::string out = "";
-    for(int i = 0; i < subStrings.size() ; i++){
+    for(uint32_t i = 0; i < subStrings.size() ; i++){
         out += subStrings[i];
     }
     return out;

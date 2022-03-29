@@ -1,5 +1,5 @@
 #include <climits>
-#include "../inc/encrpytengine.hpp"
+#include "../inc/encryptengine.hpp"
 #include "../inc/ascii_avoid_list.hpp"
 
  unsigned long long hash_str(const char* s);
@@ -36,7 +36,7 @@
      std::string secretAndSeed = secret + seed;
      uint64_t secret_hash = hash_str(secretAndSeed.c_str()) ;
      std::string encrypted;
-     for(int i = 0; i < text.length() ; i++){
+     for(uint32_t i = 0; i < text.length() ; i++){
          uint64_t shift_amount = seed.at( i % seed.length() ) * secret_hash ;
          encrypted += _getCeasarShiftedChar(text.at(i), shift_amount, true);
          if ( encrypted[i] == '\0'){
@@ -60,9 +60,9 @@
          return;
      }
      std::string secretAndSeed = secret + seed;
-     unsigned long long secret_hash = hash_str(secretAndSeed.c_str()) ;
+     uint64_t secret_hash = hash_str(secretAndSeed.c_str()) ;
      std::string decrpyted;
-     for(int i = 0; i < text.length() ; i++){
+     for(uint32_t i = 0; i < text.length() ; i++){
          uint64_t shift_amount = seed.at( i % seed.length() ) * secret_hash ;
          decrpyted += _getCeasarShiftedChar(text.at(i), shift_amount, false);;
      }

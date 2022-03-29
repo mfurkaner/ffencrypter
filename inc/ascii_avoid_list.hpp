@@ -5,11 +5,11 @@ const unsigned char ASCII_AVOID_LIST[] = {0, 1, 2, 3, 4, 5, 6, 8,
                                  23, 24, 25, 26, 27, 28, 
                                  29, 30, 31 };
 
-#define AVOID_LIST_SIZE sizeof(ASCII_AVOID_LIST)/sizeof(char)
+#define AVOID_LIST_SIZE (int)  ( sizeof(ASCII_AVOID_LIST)/sizeof(char) )
 
 inline bool does_have_avoid_element(const std::string& str){
-    for(int i = 0 ; i < str.size() ; i++){
-        for(int j = 0; j < AVOID_LIST_SIZE ; j++){
+    for(uint32_t i = 0 ; i < str.size() ; i++){
+        for(uint32_t j = 0; j < AVOID_LIST_SIZE ; j++){
             if( ASCII_AVOID_LIST[j] == str.at(i)){
                 std::cout << "Found an avoid char at " << i << " with value " << ASCII_AVOID_LIST[j] << std::endl;
             }

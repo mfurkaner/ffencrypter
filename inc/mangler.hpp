@@ -4,8 +4,8 @@
 
 class Mangler{
 protected:
-    uint64_t hash;
     std::string text;
+    uint64_t hash;
     std::string mangledText;
     
     virtual void _mangle(std::string& str) = 0;

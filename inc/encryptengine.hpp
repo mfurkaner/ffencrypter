@@ -20,9 +20,9 @@ public:
 
 class BaseEngine{
 protected:
-    std::string secret;
-    std::string seed;
     std::string text;
+    std::string seed;
+    std::string secret;
 
     BaseEngine(std::string text, std::string seed, std::string secret) : text(text),seed(seed),secret(secret) {}
 
