@@ -7,6 +7,7 @@ When using the first time, <br />
 -> use bash scripts in scripts/ directory for convenience. <br />
 
 # Using TXTEncrypter with a config file
+
 Create a file named 'config.in' using the following options  <br />
 -> command = Command to run ( enc : encrypt, dec : decrypt ) <br />
 -> filepath = Relative path of the file to encrypt/decrypt <br />
@@ -16,6 +17,7 @@ Create a file named 'config.in' using the following options  <br />
 -> addseed = Add a seed <br />
 -> mangling = Enable/disable mangling ( 0 : disable, 1 : enable ) <br />
 -> check = Enable/disable data loss check ( 0 : disable, 1 : enable ) <br />
+-> add '\#' at the beginning of a line to ignore the line
 
 # For manual use:
 
