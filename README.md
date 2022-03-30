@@ -1,4 +1,4 @@
-# TXTEncrypter
+# FFEncrypter
 <br />
 This software is an encrypt/decrypt engine with multiple layer of encryption using seeds and user authorization. <br />
 
