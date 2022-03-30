@@ -134,7 +134,7 @@ uint32_t Application::_getLayerNumber() const{
 const std::string& Application::_getSeed(uint32_t index) {
     if (_configuration.isConfigFromFile()) return _configuration.getSeed(index);
     std::cout << "Enter a seed : ";
-    std::string seed;
+    std::string seed = "";
     std::cin >> seed;
     _configuration.addSeed(seed);
 }
