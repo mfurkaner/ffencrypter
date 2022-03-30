@@ -1,8 +1,10 @@
 # TXTEncrypter
 <br />
 This software is an encrypt/decrypt engine with multiple layer of encryption using seeds and user identification.
+<br />
 
-When using the first time, <br />
+# When using the first time, <br />
+<br />
 -> install cmake to build and run the app
 -> use bash scripts in scripts/ directory for convenience. <br />
 
