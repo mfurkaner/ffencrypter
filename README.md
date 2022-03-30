@@ -1,10 +1,23 @@
-# TXTEncryptor
+# TXTEncrypter
 
 This software now supports multiple encryption layers! <br />
 
 When using the first time, <br />
 -> install cmake to build and run the app
 -> use bash scripts in scripts/ directory for convenience. <br />
+
+# Using TXTEncrypter with a config file
+Create a file named 'config.in' using the following options  <br />
+-> command = Command to run ( enc : encrypt, dec : decrypt ) <br />
+-> filepath = Relative path of the file to encrypt/decrypt <br />
+-> fileout = Relative path of the output file  <br />
+-> id = Id of the encrypter  <br />
+-> pass = Password of the encrypter <br />
+-> addseed = Add a seed <br />
+-> mangling = Enable/disable mangling ( 0 : disable, 1 : enable ) <br />
+-> check = Enable/disable data loss check ( 0 : disable, 1 : enable ) <br />
+
+# For manual use:
 
 To encrypt a file <br />
 <br />
