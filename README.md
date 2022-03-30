@@ -1,12 +1,12 @@
 # TXTEncrypter
 <br />
-This software is an encrypt/decrypt engine with multiple layer of encryption using seeds and user authorization.
+This software is an encrypt/decrypt engine with multiple layer of encryption using seeds and user authorization. <br />
+
 # When using the first time, <br />
 <br />
 -> use bash scripts in scripts/ directory for convenience <br />
 -> install cmake to build and run the app with ease <br />
 -> you can also edit & use the scripts with the compiler of your choise <br />
-<br />
 
 # Using TXTEncrypter with a config file
 <br />
@@ -19,10 +19,10 @@ Create a file named 'config.in' using the following options  <br />
 -> addseed = Add a seed <br />
 -> mangling = Enable/disable mangling ( 0 : disable, 1 : enable ) <br />
 -> check = Enable/disable data loss check ( 0 : disable, 1 : enable ) <br />
--> add '\#' at the beginning of a line to ignore the line
+-> add '\#' at the beginning of a line to ignore the line <br />
 
 # For manual use:
-
+<br />
 To encrypt a file <br />
 <br />
 -> use enc command <br />
