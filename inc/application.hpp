@@ -10,7 +10,7 @@ enum State{
 };
 
 class Application{
-    ApplicationConfiguration _configuration;
+    RunConfiguration _configuration;
     State state;
     FileHandler fileHandler;
     EncryptedHeader header;
@@ -48,7 +48,7 @@ class Application{
     void reset();
 public:
     Application(const std::string& config_path) : _configuration(config_path){}
-    Application(const ApplicationConfiguration& configuration) : _configuration(configuration){}
+    Application(const RunConfiguration& configuration) : _configuration(configuration){}
     
     void Run();
 

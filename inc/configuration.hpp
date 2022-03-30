@@ -7,6 +7,7 @@
 
 class Configuration{
 protected:
+    std::vector<std::string> lines;
     bool _config_from_file;
     std::string _config_path;
     FileHandler _fileHandler;
@@ -19,8 +20,7 @@ public:
     }
 };
 
-
-class ApplicationConfiguration : public Configuration{
+class RunConfiguration : public Configuration{
     std::string _command;
     std::string _filepath;
     std::string _fileout = ".";
@@ -33,8 +33,8 @@ class ApplicationConfiguration : public Configuration{
     bool _getConfig();
 
 public:
-    ApplicationConfiguration(){ }
-    ApplicationConfiguration(const std::string& config_path) : Configuration(config_path) {_getConfig();}
+    RunConfiguration(){ }
+    RunConfiguration(const std::string& config_path) : Configuration(config_path) {_getConfig();}
 
     const std::string nullstr = "NULL";
 

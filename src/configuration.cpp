@@ -8,7 +8,7 @@ const char* const AVAILABLE_CONFIGURATIONS[endofconfig] = {
     "mangling", "check", "command"
 };
 
-bool ApplicationConfiguration::_getConfig(){
+bool RunConfiguration::_getConfig(){
     std::string config_txt;
     _fileHandler.setFilePath(_config_path);
 
@@ -16,22 +16,21 @@ bool ApplicationConfiguration::_getConfig(){
         std::cerr << "Config file not found." << std::endl;
         return false;
     } 
-    
-    std::vector<std::string> commands;
 
     while ( config_txt.length() ){
-        uint32_t line_start_index = ( config_txt.find_last_of('\n') < config_txt.find_last_of('\r') ) ? config_txt.find_last_of('\n') : config_txt.find_last_of('\r');
+        uint64_t line_start_index = ( config_txt.find_last_of('\n') < config_txt.find_last_of('\r') ) ? config_txt.find_last_of('\n') : config_txt.find_last_of('\r');
         std::string line = config_txt.substr(line_start_index == std::string::npos ? 0 : line_start_index );
         if ( line.length() && line.find('#') == std::string::npos ){
-            commands.push_back( line );
+            lines.push_back( line );
         }
         for(uint32_t i = 0; i < line.length() ; i++){
             config_txt.pop_back();
         }
     }
-    std::reverse(commands.begin(), commands.end());
-    for(std::string command : commands){
+
+    for(uint32_t i = lines.size() - 1 ; i >= 0 ; i--){
         uint32_t config_index = 0;
+        const std::string command = lines[i];
         for ( ; config_index < endofconfig ; config_index++ ){
             if ( command.find( AVAILABLE_CONFIGURATIONS[config_index] ) != std::string::npos ){
                 break;
@@ -83,12 +82,13 @@ bool ApplicationConfiguration::_getConfig(){
         default:
             break;
         }
+        lines.pop_back();
     }
 
     return true;
 }
 
-void ApplicationConfiguration::clear(){
+void RunConfiguration::clear(){
     _config_path = "";
     _fileHandler = FileHandler();
     _filepath = "";
