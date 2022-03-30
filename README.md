@@ -9,8 +9,8 @@ This software is an encrypt/decrypt engine with multiple layer of encryption usi
 -> you can also edit & use the scripts with the compiler of your choise <br />
 
 # Using TXTEncrypter with a config file
-<br />
 Create a file named 'config.in' using the following options  <br />
+<br />
 -> command = Command to run ( enc : encrypt, dec : decrypt ) <br />
 -> filepath = Relative path of the file to encrypt/decrypt <br />
 -> fileout = Relative path of the output file  <br />
@@ -22,7 +22,6 @@ Create a file named 'config.in' using the following options  <br />
 -> add '\#' at the beginning of a line to ignore the line <br />
 
 # For manual use:
-<br />
 To encrypt a file <br />
 <br />
 -> use enc command <br />
