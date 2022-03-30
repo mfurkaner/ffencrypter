@@ -1,6 +1,6 @@
 # TXTEncrypter
 <br />
-This software is an encrypt/decrypt engine with multiple layer of encryption using seeds and user identification.
+This software is an encrypt/decrypt engine with multiple layer of encryption using seeds and user authorization.
 <br />
 
 # When using the first time, <br />
