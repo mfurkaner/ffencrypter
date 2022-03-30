@@ -31,6 +31,7 @@ class Application{
     bool _handleWriting(const std::string& out);
 
     const std::string& _getSeed(uint32_t index);
+    void _getSeedFromUserUntil(uint32_t num);
     void _updateCommand();
     void _updateCretentials();
     void _updateOutputPath();

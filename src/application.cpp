@@ -131,15 +131,22 @@ uint32_t Application::_getLayerNumber() const{
     return num;
 }
 
+void Application::_getSeedFromUserUntil(uint32_t num){
+    if (_configuration.isConfigFromFile()) return;
+    while( _configuration.getSeeds().size() < num ){
+        std::cout << "Enter a seed : ";
+        std::string seed;
+        std::cin >> seed;
+        _configuration.addSeed(seed);
+    }
+}
+
 const std::string& Application::_getSeed(uint32_t index) {
-    if (_configuration.isConfigFromFile()) return _configuration.getSeed(index);
-    std::cout << "Enter a seed : ";
-    std::string seed = "";
-    std::cin >> seed;
-    _configuration.addSeed(seed);
+    return _configuration.getSeed(index);
 }
 
 void Application::_Encrypt(std::string& str, uint32_t num){
+
     for(uint32_t i = 0; i < num ; i++){
         std::string seed = _getSeed(i);
         if ( seed == _configuration.nullstr ) return;
@@ -188,7 +195,9 @@ void Application::handleEncryption(){
     std::string encrypted = text;
     _updateCretentials();
     _updateOutputPath();
-    _Encrypt(encrypted, _getLayerNumber());
+    uint32_t layerCount = _getLayerNumber();
+    _getSeedFromUserUntil(layerCount);
+    _Encrypt(encrypted, layerCount);
     _handleMangling(encrypted);
     bool nodataloss = _checkForDataLoss(encrypted);
     if (nodataloss) _handleWriting(encrypted);
