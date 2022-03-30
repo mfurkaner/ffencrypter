@@ -7,19 +7,25 @@
 
 class Configuration{
 protected:
+    bool _config_from_file;
     std::string _config_path;
     FileHandler _fileHandler;
     virtual bool _getConfig() = 0;
 public:
-    Configuration(){}
-    Configuration(const std::string& config_path) : _config_path(config_path){_fileHandler.setFilePath(config_path);}
+    Configuration() : _config_from_file(false){  }
+
+    Configuration(const std::string& config_path) :_config_from_file(true), _config_path(config_path) {
+        _fileHandler.setFilePath(config_path); 
+    }
 };
 
 
 class ApplicationConfiguration : public Configuration{
+    std::string _command;
     std::string _filepath;
-    std::string _fileout;
-    std::string _id, _password;
+    std::string _fileout = ".";
+    std::string _id;
+    std::string _password;
     std::vector<std::string> _seeds;
     bool _mangling = true;
     bool _check_for_data_loss = false;
@@ -27,17 +33,25 @@ class ApplicationConfiguration : public Configuration{
     bool _getConfig();
 
 public:
-    ApplicationConfiguration(const ApplicationConfiguration& config){_check_for_data_loss = config._check_for_data_loss;}
+    ApplicationConfiguration(){ }
     ApplicationConfiguration(const std::string& config_path) : Configuration(config_path) {_getConfig();}
 
+    const std::string nullstr = "NULL";
+
 //GETS
-    const std::string& getFilePath(){return _filepath;}
-    const std::string& getFileOut(){return _fileout;}
-    const std::string& getID(){return _id;}
-    const std::string& getPassword(){return _password;}
-    const std::vector<std::string>& getSeeds(){return _seeds;}
-    bool isManglingEnabled(){return _mangling;}
-    bool isDataLossCheckEnabled(){return _check_for_data_loss;}
+    const std::string& getCommand() const { return _command; }
+    const std::string& getFilePath() const { return _filepath; }
+    const std::string& getFileOut() const{ return _fileout; }
+    const std::string& getID() const { return _id; }
+    const std::string& getPassword() const { return _password; }
+    const std::vector<std::string>& getSeeds() const { return _seeds; }
+    const std::string& getSeed(uint32_t index) { 
+        if (_seeds.size() > index) return _seeds[index];
+        return nullstr;  
+    }
+    bool isManglingEnabled() const { return _mangling; }
+    bool isDataLossCheckEnabled() const { return _check_for_data_loss; }
+    bool isConfigFromFile() const { return _config_from_file; }
 //SETS
     void setFilePath(const std::string& filepath){_filepath = filepath;}
     void setFileOut(const std::string& fileout){_fileout = fileout;}
@@ -54,12 +68,13 @@ public:
 
 
     void clear();
+    bool isEmpty();
 
 };
 
 enum ConfigurationIndex{
     filepath_, fileout_, id_, pass_, seed_,
-    mangling_, datalosscheck_,
+    mangling_, datalosscheck_, command_,
 
     endofconfig
 };

@@ -1,4 +1,4 @@
-
+#include <string>
 
 const unsigned char ASCII_AVOID_LIST[] = {0, 1, 2, 3, 4, 5, 6, 8, 
                                  16, 17, 18, 19, 20, 21, 

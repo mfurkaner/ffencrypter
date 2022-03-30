@@ -14,6 +14,7 @@ class Application{
     State state;
     FileHandler fileHandler;
     EncryptedHeader header;
+    std::string command;
     std::string text;
     std::string header_in_txt;
 
@@ -24,16 +25,18 @@ class Application{
 
     bool _checkForDataLoss(const std::string& out);
 
-    void _handleMangling(std::string& text_to_mangle);
-    void _handleUnmangling(std::string& text_to_unmangle);
+    void _handleMangling(std::string& text_to_mangle) const;
+    void _handleUnmangling(std::string& text_to_unmangle) const;
     bool _handleReading();
     bool _handleWriting(const std::string& out);
 
-    void _getCretentials();
-    void _getOutputPath();
-    int _getLayerNumber();
-    void _Encrypt(std::string& str, int num);
-    void _Decrypt(std::string& str, int num);
+    const std::string& _getSeed(uint32_t index);
+    void _updateCommand();
+    void _updateCretentials();
+    void _updateOutputPath();
+    uint32_t _getLayerNumber() const;
+    void _Encrypt(std::string& str, uint32_t num);
+    void _Decrypt(std::string& str, uint32_t num);
 
     void handleEncryption();
     void handleDecryption();

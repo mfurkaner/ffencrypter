@@ -1,0 +1,19 @@
+command = dec
+filepath = config_nomangle.enc
+fileout = .
+id = furkan
+pass = er
+addseed = 'hellothere'
+addseed = 'will this work?'
+mangling = 0
+check = 1
+
+
+# command = Command to run ( enc : encrypt, dec : decrypt )
+# filepath = Relative path of the file to encrypt/decrypt
+# fileout = Relative path of the output file
+# id = Id of the encrypter
+# pass = Password of the encrypter
+# addseed = Add a seed
+# mangling = Enable/disable mangling ( 0 : disable, 1 : enable )
+# check = Enable/disable data loss check ( 0 : disable, 1 : enable )

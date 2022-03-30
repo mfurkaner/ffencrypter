@@ -1,4 +1,5 @@
 #include <climits>
+#include <string>
 #include "../inc/encryptengine.hpp"
 #include "../inc/ascii_avoid_list.hpp"
 
