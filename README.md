@@ -1,13 +1,13 @@
 # TXTEncrypter
-
-This software now supports multiple encryption layers! <br />
+<br />
+This software is an encrypt/decrypt engine with multiple layer of encryption using seeds and user identification.
 
 When using the first time, <br />
 -> install cmake to build and run the app
 -> use bash scripts in scripts/ directory for convenience. <br />
 
 # Using TXTEncrypter with a config file
-
+<br />
 Create a file named 'config.in' using the following options  <br />
 -> command = Command to run ( enc : encrypt, dec : decrypt ) <br />
 -> filepath = Relative path of the file to encrypt/decrypt <br />
