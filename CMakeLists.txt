@@ -15,6 +15,7 @@ set(SRC
     src/encryptengine.cpp 
     src/hash.cpp
     src/filehandler.cpp
+    src/configuration.cpp
 )
 
 set(INC
@@ -23,8 +24,11 @@ set(INC
     inc/encryptengine.hpp 
     inc/filehandler.hpp
     inc/mangler.hpp 
+    inc/configuration.hpp
 )
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ../../)
 
 include_directories(inc)
 
-add_executable(TXTencrypter ${INC} ${SRC})
+add_executable(TXTencrypter_dbg ${INC} ${SRC})

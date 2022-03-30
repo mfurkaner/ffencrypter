@@ -6,7 +6,7 @@
 
 int main(){
     
-    Application App;
+    Application App("config.in");
     App.Run();
 
     return 0;

@@ -26,7 +26,7 @@ bool FileHandler::writeTextToFile(const std::string& text){
     return true;
 } 
 
-int FileHandler::printOnlyDifferences(const std::string& t1, const std::string& t2){
+uint32_t FileHandler::printOnlyDifferences(const std::string& t1, const std::string& t2){
     uint32_t count = 0;
     for(uint32_t i = 0; i < t1.size() && i < t2.size() ; i++){
         if( t1.at(i) != t2.at(i) ){
