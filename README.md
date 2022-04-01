@@ -2,7 +2,7 @@
 <br />
 This software is an encrypt/decrypt engine with multiple layer of encryption using seeds and user authorization. <br />
 
-# When using the first time, <br />
+# When building for the first time, <br />
 <br />
 -> use bash scripts in scripts/ directory for convenience <br />
 -> install cmake to build and run the app with ease <br />
