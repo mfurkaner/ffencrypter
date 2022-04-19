@@ -1,12 +1,12 @@
 command = dec
-filepath = config_nomangle.enc
-fileout = .
+filepath = config_dec.txt.enc
+fileout = config_dec.txt.zip
 id = furkan
 pass = er
 addseed = 'hellothere'
 addseed = 'will this work?'
 mangling = 0
-check = 1
+check = 0
 
 
 # command = Command to run ( enc : encrypt, dec : decrypt )

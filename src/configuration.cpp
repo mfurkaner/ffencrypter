@@ -13,7 +13,7 @@ bool RunConfiguration::_getConfig(){
     _fileHandler.setFilePath(_config_path);
 
     if ( !_fileHandler.getTextFromFile(config_txt) ){
-        std::cerr << "Config file not found." << std::endl;
+        std::cerr << "Config file not found at " << _config_path <<  std::endl;
         return false;
     } 
 
@@ -28,7 +28,9 @@ bool RunConfiguration::_getConfig(){
         }
     }
 
-    for(uint32_t i = lines.size() - 1 ; i >= 0 ; i--){
+    while( !lines.empty() )
+    {
+        uint32_t i = lines.size() - 1;
         uint32_t config_index = 0;
         const std::string command = lines[i];
         for ( ; config_index < endofconfig ; config_index++ ){
