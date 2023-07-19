@@ -8,7 +8,7 @@ This software is an encrypt/decrypt engine with multiple layer of encryption usi
 -> install cmake to build and run the app with ease <br />
 -> you can also edit & use the scripts with the compiler of your choise <br />
 
-# Using TXTEncrypter with a config file
+# Using zEncrypter with a config file
 Create a file named 'config.in' using the following options  <br />
 <br />
 -> command = Command to run ( enc : encrypt, dec : decrypt ) <br />
