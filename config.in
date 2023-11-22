@@ -1,12 +1,13 @@
-command = dec
-filepath = config_dec.txt.enc
-fileout = config_dec.txt.zip
 id = furkan
 pass = er
-addseed = 'hellothere'
-addseed = 'will this work?'
-mangling = 0
-check = 0
+command = dec
+filepath = testdata/z.enc
+fileout = testdata/z_1.jpeg
+addseed = 'zeynebi cok seviyorum'
+addseed = 'benim tatli kariiiiim'
+addseed = 'seni ben pek cok pek cok severim'
+
+check = 1
 
 
 # command = Command to run ( enc : encrypt, dec : decrypt )
@@ -14,6 +15,7 @@ check = 0
 # fileout = Relative path of the output file
 # id = Id of the encrypter
 # pass = Password of the encrypter
-# addseed = Add a seed
+# addseed = Add a seed between ' ' ( ex : 'seed' )
 # mangling = Enable/disable mangling ( 0 : disable, 1 : enable )
 # check = Enable/disable data loss check ( 0 : disable, 1 : enable )
+# binfile = File is a binary

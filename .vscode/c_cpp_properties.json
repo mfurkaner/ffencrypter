@@ -1,17 +1,18 @@
 {
     "configurations": [
         {
-            "name": "Mac",
+            "name": "Win",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${default}"
             ],
-            "defines": [],
-            "macFrameworkPath": [
-                "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks"
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
             ],
-            "intelliSenseMode": "macos-clang-arm64",
-            "compilerPath": "/usr/bin/clang++",
-            "configurationProvider": "ms-vscode.cmake-tools"
+            "windowsSdkVersion": "10.0.22000.0",
+            "intelliSenseMode": "windows-gcc-x64",
+            "compilerPath": "C:/MinGW/bin/g++.exe"
         }
     ],
     "version": 4

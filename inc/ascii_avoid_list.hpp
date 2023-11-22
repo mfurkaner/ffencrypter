@@ -1,9 +1,9 @@
 #include <string>
 
-const unsigned char ASCII_AVOID_LIST[] = {0, 1, 2, 3, 4, 5, 6, 8, 
+const unsigned char ASCII_AVOID_LIST[] = {0} /*{0, 1, 2, 3, 4, 5, 6, 8, 
                                  16, 17, 18, 19, 20, 21, 
                                  23, 24, 25, 26, 27, 28, 
-                                 29, 30, 31 };
+                                 29, 30, 31 }*/;
 
 #define AVOID_LIST_SIZE (int)  ( sizeof(ASCII_AVOID_LIST)/sizeof(char) )
 

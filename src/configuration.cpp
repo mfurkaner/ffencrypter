@@ -5,7 +5,15 @@
 const char* const AVAILABLE_CONFIGURATIONS[endofconfig] = {
     "filepath", "fileout", 
     "id", "pass", "addseed", 
-    "mangling", "check", "command"
+    "mangling", "check", "command",
+    "binfile"
+};
+
+const char* const AVAILABLE_TR_CONFIGURATIONS[endofconfig] = {
+    "konum", "kayit", 
+    "id", "sifre", "tohumekle", 
+    "calkala", "kontrol", "komut",
+    "bindosyasi"
 };
 
 bool RunConfiguration::_getConfig(){
@@ -80,6 +88,9 @@ bool RunConfiguration::_getConfig(){
             while (_command.find(' ') != std::string::npos) {
                 _command.erase(_command.find(' '), 1);
             }
+            break;
+        case binfile_:
+            _binfile = atoi(command.substr(command.find('=') + 1).c_str());
             break;
         default:
             break;

@@ -29,6 +29,7 @@ class RunConfiguration : public Configuration{
     std::vector<std::string> _seeds;
     bool _mangling = true;
     bool _check_for_data_loss = false;
+    bool _binfile = true;
 
     bool _getConfig();
 
@@ -49,6 +50,7 @@ public:
         if (_seeds.size() > index) return _seeds[index];
         return nullstr;  
     }
+    bool isBinaryFile() const {return _binfile;}
     bool isManglingEnabled() const { return _mangling; }
     bool isDataLossCheckEnabled() const { return _check_for_data_loss; }
     bool isConfigFromFile() const { return _config_from_file; }
@@ -75,6 +77,7 @@ public:
 enum ConfigurationIndex{
     filepath_, fileout_, id_, pass_, seed_,
     mangling_, datalosscheck_, command_,
+    binfile_,
 
     endofconfig
 };

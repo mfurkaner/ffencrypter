@@ -17,6 +17,15 @@ bool FileHandler::getTextFromFile(std::string& text){
     return true;
 }
 
+bool FileHandler::getBinFromFile(std::vector<uint8_t>& bin){
+    std::ifstream fin;
+    fin.open(filepath, std::ios::in | std::ios::binary);
+    if(fin.fail()) return false;
+    bin = std::vector<uint8_t>(std::istreambuf_iterator<char>(fin), {});
+    fin.close();
+    return true;
+}
+
 bool FileHandler::writeTextToFile(const std::string& text){
     std::ofstream fout;
     fout.open(filepath, std::ios::out | std::ios::binary);
@@ -26,11 +35,37 @@ bool FileHandler::writeTextToFile(const std::string& text){
     return true;
 } 
 
+bool FileHandler::writeBinToFile(const std::vector<uint8_t>& bin){
+    std::ofstream fout;
+    fout.open(filepath, std::ios::out | std::ios::binary);
+    if(fout.fail()) return false;
+
+    uint8_t* bins =  new uint8_t[bin.size()];
+    for(int i = 0 ; i < bin.size(); i++){
+        bins[i] = bin[i];
+    }
+    fout.write((const char*)bins, bin.size());
+    fout.close();
+    delete [] bins;
+    return true;
+}
+
 uint32_t FileHandler::printOnlyDifferences(const std::string& t1, const std::string& t2){
     uint32_t count = 0;
     for(uint32_t i = 0; i < t1.size() && i < t2.size() ; i++){
         if( t1.at(i) != t2.at(i) ){
             std::cout << "They differ at " << i << " : t1=" << t1.at(i) << " t2=" << t2.at(i) << std::endl; 
+            count++;
+        }
+    }
+    return count;
+}
+
+uint32_t FileHandler::printOnlyDifferences(const std::vector<uint8_t>& t1, const std::vector<uint8_t>& t2){
+    uint32_t count = 0;
+    for(uint32_t i = 0; i < t1.size() && i < t2.size() ; i++){
+        if( t1.at(i) != t2.at(i) ){
+            std::cout << "They differ at " << i << " : t1=" << static_cast<char>(t1.at(i)) << " t2=" <<static_cast<char>(t2.at(i)) << std::endl; 
             count++;
         }
     }

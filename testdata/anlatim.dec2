@@ -1,0 +1,41 @@
+id:id
+pass:pass
+
+
+encryptengine :
+    secret = "passid" 
+    secret_hash1 = hash("passidseed")
+    secret_hash2 = hash("passidali")
+
+    aaaaaaaaaaaaaaaa
+    seedseedseedseed = secret_hash1
+    gssfgssfgssfgssf
+    alialialialialia = secret_hash2
+    123453
+
+    a += s * secret_hash
+
+mangler : 
+    abcdefg -> ecagbfd (hash)
+
+    N = len(string)     // N = 17*3*2     (aaaaaa)(aaaaaa)(aaaaaa)(aaaaaa)(aaaaaa)(aaaaaa)(aaaaaa)(aaaaaa)(aaaaaa)(aaaaaa)(aaaaaa)(aaaaaa)(aaaaaa)(aaaaaa)(aaaaaa)
+                        //              (aa)(aa)(aa) (aa)(aa)(aa) (aa)(aa)(aa) (aa)(aa)(aa) (aa)(aa)(aa) (aa)(aa)(aa) (aa)(aa)(aa) (aa)(aa)(aa) (aa)(aa)(aa) (aa)(aa)(aa) (aa)(aa)(aa) 
+
+
+encyptedtext = encrypter ( string ) : mangler ( encryptengine(string, id, pass, seeds), id, pass )
+header = mangler( encrptengine( hash(id) + hash(pass) ) )
+
+
+fileout -> header + encyptedtext
+
+id
+pass
+header 
+
+
+
+
+private key + other public key = 1 -> 2 (to decrypt needs public key + other private key)
+public key + other private key
+
+pr1 + pb2 = encrypted msg of 1 -> 2 ( to decrypt, needs pb1 + pr2 )
