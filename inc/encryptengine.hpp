@@ -6,6 +6,9 @@
 #include "mangler.hpp"
 
 
+#define HEADER_MAX_DEPTH 10
+
+
 class EncryptedHeader{
     std::string username;
     std::string password;

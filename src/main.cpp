@@ -20,5 +20,9 @@ int main(int argc, char *argv[]){
     Application App(config_file);
     App.Run();
 
+    //std::string a;
+    //std::getline(std::cin, a);
+    system("pause");
+
     return 0;
 }

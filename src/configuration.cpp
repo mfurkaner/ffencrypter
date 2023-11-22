@@ -6,7 +6,7 @@ const char* const AVAILABLE_CONFIGURATIONS[endofconfig] = {
     "filepath", "fileout", 
     "id", "pass", "addseed", 
     "mangling", "check", "command",
-    "binfile"
+    "binfile", "depth"
 };
 
 const char* const AVAILABLE_TR_CONFIGURATIONS[endofconfig] = {
@@ -91,6 +91,9 @@ bool RunConfiguration::_getConfig(){
             break;
         case binfile_:
             _binfile = atoi(command.substr(command.find('=') + 1).c_str());
+            break;
+        case depth_:
+            _depth = atoi(command.substr(command.find('=') + 1).c_str());
             break;
         default:
             break;

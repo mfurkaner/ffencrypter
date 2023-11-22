@@ -1,5 +1,6 @@
 #include <string>
 #include <vector>
+#include <cmath>
 #include "../inc/mangler.hpp"
 
 extern uint64_t hash_str_ign_char_order(const char* s);
@@ -17,25 +18,25 @@ bool Mangler::is_prime(size_t num){
 
 std::string Mangler::getMangledText(){
     mangledText = text;
-    _mangle(mangledText);
+    _mangle(mangledText, _depth);
     return mangledText;
 }
 
 std::string Mangler::getUnmangledText(){
     mangledText = text;
-    _unmangle(mangledText);
+    _unmangle(mangledText, _depth);
     return mangledText;
 }
 
 std::vector<uint8_t> Mangler::getMangledBin(){
     mangledBin = bin;
-    _mangle(mangledBin);
+    _mangle(mangledBin, _depth);
     return mangledBin;
 }
 
 std::vector<uint8_t> Mangler::getUnmangledBin(){
     mangledBin = bin;
-    _unmangle(mangledBin);
+    _unmangle(mangledBin, _depth);
     return mangledBin;
 }
 
@@ -68,10 +69,11 @@ void FurkanMangler::_shift(std::vector<uint8_t>& v, size_t amount, bool to_right
     v = shifted;
 }
 
-void FurkanMangler::_mangle(std::string& str){
+void FurkanMangler::_mangle(std::string& str, int depth){
+    if(depth == 0) return;
     size_t maxDivider = _getMaxPrimeDivider( str.size() );
 
-    if ( maxDivider == str.size() ){
+    if (maxDivider == str.size() ){
         _mangleSmallestSection(str);
         return;
     }
@@ -81,17 +83,21 @@ void FurkanMangler::_mangle(std::string& str){
 
     for( size_t i = 0 ; i < maxDivider ; i++){
         subStrings.push_back( str.substr(i*amount_to_shift, amount_to_shift) );
-        _mangle(subStrings[i]);
+        _mangle(subStrings[i], depth-1);
     }
 
     _mangleSubStrings(subStrings);
     str = _concatStrings(subStrings);
 }
 
-void FurkanMangler::_mangle(std::vector<uint8_t>& bin){
+void FurkanMangler::_mangle(std::vector<uint8_t>& bin, int depth){
+    if(depth == 0){
+        _mangleSmallestSection(bin);
+        return;
+    }
     size_t maxDivider = _getMaxPrimeDivider( bin.size() );
 
-    if ( maxDivider == bin.size() ){
+    if (maxDivider == bin.size() ){
         _mangleSmallestSection(bin);
         return;
     }
@@ -103,14 +109,15 @@ void FurkanMangler::_mangle(std::vector<uint8_t>& bin){
         std::vector<uint8_t>::const_iterator first = bin.begin() + i*amount_to_shift;
         std::vector<uint8_t>::const_iterator last = bin.begin() + (i+1)*amount_to_shift; 
         subVectors.push_back( std::vector<uint8_t>(first, last) );
-        _mangle(subVectors[i]);
+        _mangle(subVectors[i], depth-1);
     }
 
     _mangleSubVectors(subVectors);
     bin = _concatVectors(subVectors);
 }
 
-void FurkanMangler::_unmangle(std::string& str){
+void FurkanMangler::_unmangle(std::string& str, int depth){
+    if(depth == 0) return;
     size_t maxDivider = _getMaxPrimeDivider( str.size() );
 
     if ( maxDivider == str.size() ){
@@ -123,17 +130,21 @@ void FurkanMangler::_unmangle(std::string& str){
 
     for( size_t i = 0 ; i < maxDivider ; i++){
         subStrings.push_back( str.substr(i*amount_to_shift, amount_to_shift) );
-        _unmangle(subStrings[i]);
+        _unmangle(subStrings[i], depth-1);
     }
 
     _unmangleSubStrings(subStrings);
     str = _concatStrings(subStrings);
 }
 
-void FurkanMangler::_unmangle(std::vector<uint8_t>& bin){
+void FurkanMangler::_unmangle(std::vector<uint8_t>& bin, int depth){
+    if(depth == 0){
+        _unmangleSmallestSection(bin);
+        return;
+    }
     size_t maxDivider = _getMaxPrimeDivider( bin.size() );
 
-    if ( maxDivider == bin.size() ){
+    if (maxDivider == bin.size() ){
         _unmangleSmallestSection(bin);
         return;
     }
@@ -145,7 +156,7 @@ void FurkanMangler::_unmangle(std::vector<uint8_t>& bin){
         std::vector<uint8_t>::const_iterator first = bin.begin() + i*amount_to_shift;
         std::vector<uint8_t>::const_iterator last = bin.begin() + (i+1)*amount_to_shift; 
         subVectors.push_back( std::vector<uint8_t>(first, last) );
-        _unmangle(subVectors[i]);
+        _unmangle(subVectors[i], depth-1);
     }
 
     _unmangleSubVectors(subVectors);
@@ -153,12 +164,35 @@ void FurkanMangler::_unmangle(std::vector<uint8_t>& bin){
 }
 
 size_t FurkanMangler::_getMaxPrimeDivider(size_t count){
-    for ( uint32_t i = count/2 ; i >= 2 ; i--){
-        if( count % i == 0 && is_prime(i) ){
-            return i;
-        }
-    }
-    return count;
+    if(count == 0) return 0;
+
+    size_t maxPrime = 1;
+    while (count % 2 == 0)  
+    {  
+        maxPrime = 2;
+        count = count/2;  
+    }  
+  
+    // n must be odd at this point. So we can skip  
+    // one element (Note i = i +2)  
+    for (int i = 3; i <= std::sqrt(count); i = i + 2)  
+    {  
+        // While i divides n, print i and divide n  
+        while (count % i == 0)  
+        {  
+            if(i > maxPrime){
+                maxPrime = i;
+            }
+            count = count/i;  
+        }  
+    }  
+  
+    // This condition is to handle the case when n  
+    // is a prime number greater than 2  
+    if (count > 2 && maxPrime < count)  
+        maxPrime = count;
+
+    return maxPrime;
 }
 
 void FurkanMangler::_mangleSubStrings(std::vector<std::string>& subStrings){

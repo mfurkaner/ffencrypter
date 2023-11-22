@@ -1,4 +1,5 @@
 #include "../inc/application.hpp"
+#include <cmath>
 
 extern uint64_t hash_str(const char * s);
 
@@ -82,6 +83,10 @@ bool Application::_handleReading(){
         std::cerr << "Couldn't open " << filepath << std::endl;
         return false;
     }
+
+    //std::cout << "Read " << (_configuration.isBinaryFile() ? binary.size() : text.length()) << " bytes from " << filepath << std::endl;
+    //printPrimeNumbers();
+
     if ( state == Decrypting && !_checkAuthentication_()){
         std::cerr << "You are not authorized to decrypt this file." << std::endl;
         return false;
@@ -111,25 +116,25 @@ bool Application::_handleWriting(const std::vector<uint8_t>& out_bin){
 
 void Application::_handleMangling(std::string& text_to_mangle) const {
     if ( !_configuration.isManglingEnabled() ) return;
-    FurkanMangler mangler(text_to_mangle, hash_str((_configuration.getPassword() + _configuration.getID()).c_str()));
+    FurkanMangler mangler(text_to_mangle, hash_str((_configuration.getPassword() + _configuration.getID()).c_str()), _configuration.getDepth());
     text_to_mangle = mangler.getMangledText();
 }
 
 void Application::_handleMangling(std::vector<uint8_t>& bin) const {
     if ( !_configuration.isManglingEnabled() ) return;
-    FurkanMangler mangler(bin, hash_str((_configuration.getPassword() + _configuration.getID()).c_str()));
+    FurkanMangler mangler(bin, hash_str((_configuration.getPassword() + _configuration.getID()).c_str()), _configuration.getDepth());
     bin = mangler.getMangledBin();
 }
 
 void Application::_handleUnmangling(std::string& text_to_unmangle) const {
     if ( !_configuration.isManglingEnabled()  ) return;
-    FurkanMangler mangler(text_to_unmangle, hash_str((_configuration.getPassword() + _configuration.getID()).c_str()));
+    FurkanMangler mangler(text_to_unmangle, hash_str((_configuration.getPassword() + _configuration.getID()).c_str()), _configuration.getDepth());
     text_to_unmangle = mangler.getUnmangledText();
 }
 
 void Application::_handleUnmangling(std::vector<uint8_t>& bin) const {
     if ( !_configuration.isManglingEnabled() ) return;
-    FurkanMangler mangler(bin, hash_str((_configuration.getPassword() + _configuration.getID()).c_str()));
+    FurkanMangler mangler(bin, hash_str((_configuration.getPassword() + _configuration.getID()).c_str()), _configuration.getDepth());
     bin = mangler.getUnmangledBin();
 }
 
@@ -396,4 +401,41 @@ void Application::printWelcomeMessage(){
 }
 void Application::printExitMessage(){
     std::cout << "Until we meet again..." << std::endl;
+}
+
+void Application::printPrimeNumbers(){
+    std::vector<int> primes;
+
+    size_t size = (_configuration.isBinaryFile() ? binary.size() : text.length());
+    size_t s = size;
+
+    while (size % 2 == 0)  
+    {  
+        primes.push_back(2);
+        size = size/2;  
+    }  
+  
+    // n must be odd at this point. So we can skip  
+    // one element (Note i = i +2)  
+    for (int i = 3; i <= std::sqrt(size); i = i + 2)  
+    {  
+        // While i divides n, print i and divide n  
+        while (size % i == 0)  
+        {  
+            primes.push_back(i);
+            size = size/i;  
+        }  
+    }  
+  
+    // This condition is to handle the case when n  
+    // is a prime number greater than 2  
+    if (size > 2)  
+        primes.push_back(size);
+        
+
+    std::cout << "Prime divisors of " << s << ":\n";
+    for(auto i : primes){
+        std::cout << i<< ", ";
+    }
+    std::cout << std::endl;
 }

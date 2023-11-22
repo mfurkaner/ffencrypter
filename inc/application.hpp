@@ -64,6 +64,8 @@ class Application{
     void printWelcomeMessage();
     void printExitMessage();
 
+    void printPrimeNumbers();
+
     void reset();
 public:
     Application(const std::string& config_path) : _configuration(config_path){}

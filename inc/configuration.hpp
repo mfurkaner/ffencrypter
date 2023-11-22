@@ -30,6 +30,7 @@ class RunConfiguration : public Configuration{
     bool _mangling = true;
     bool _check_for_data_loss = false;
     bool _binfile = true;
+    int _depth = 10;
 
     bool _getConfig();
 
@@ -45,6 +46,7 @@ public:
     const std::string& getFileOut() const{ return _fileout; }
     const std::string& getID() const { return _id; }
     const std::string& getPassword() const { return _password; }
+    const int getDepth() const { return _depth; }
     const std::vector<std::string>& getSeeds() const { return _seeds; }
     const std::string& getSeed(uint32_t index) { 
         if (_seeds.size() > index) return _seeds[index];
@@ -77,7 +79,7 @@ public:
 enum ConfigurationIndex{
     filepath_, fileout_, id_, pass_, seed_,
     mangling_, datalosscheck_, command_,
-    binfile_,
+    binfile_, depth_,
 
     endofconfig
 };

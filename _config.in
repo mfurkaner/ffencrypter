@@ -1,13 +1,13 @@
-id = cihan
-pass = gencal
-command = dec
-filepath = testdata/cok_onemli_jpeg.enc
-fileout = testdata/cok_onemli_jpeg.jpeg
-addseed = 'benim adim cihan'
-addseed = 'canim cok sikilir'
-addseed = 'xdxdxd'
+id = furkan
+pass = er
+command = enc
+filepath = testdata/anlatim.txt
+fileout = testdata/anlatim.enc
+addseed = 'zeynebi cok seviyorum'
+addseed = 'benim tatli kariiiiim'
+addseed = 'seni ben pek cok pek cok severim'
 mangling = 1
-depth = 3
+depth = 10
 
 check = 1
 
@@ -19,6 +19,5 @@ check = 1
 # pass = Password of the encrypter
 # addseed = Add a seed between ' ' ( ex : 'seed' )
 # mangling = Enable/disable mangling ( 0 : disable, 1 : enable )
-# depth = Depth of mangling ( 0-10 )
 # check = Enable/disable data loss check ( 0 : disable, 1 : enable )
 # binfile = File is a binary

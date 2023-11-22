@@ -33,7 +33,7 @@ uint8_t BaseEngine::_getCeasarShiftedChar(uint8_t c, const uint64_t& shift_amoun
      std::string secret = uhash_str + phash_str;
 
      EncryptEngine headerEncrypter(uhash_str + phash_str, seed, secret);
-     FurkanMangler mangler(headerEncrypter.getEncryptedText(), hash_str( (id + pass).c_str() ));
+     FurkanMangler mangler(headerEncrypter.getEncryptedText(), hash_str( (id + pass).c_str() ), HEADER_MAX_DEPTH);
      return mangler.getMangledText();
  }
 
@@ -48,7 +48,7 @@ uint8_t BaseEngine::_getCeasarShiftedChar(uint8_t c, const uint64_t& shift_amoun
      std::string secret = uhash_str + phash_str;
 
      EncryptEngine headerEncrypter(uhash_str + phash_str, seed, secret);
-     FurkanMangler mangler(headerEncrypter.getEncryptedText(), hash_str( (id + pass).c_str() ));
+     FurkanMangler mangler(headerEncrypter.getEncryptedText(), hash_str( (id + pass).c_str() ), HEADER_MAX_DEPTH);
 
      std::vector<uint8_t> header_bin;
      auto header = mangler.getMangledText();
