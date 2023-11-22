@@ -114,4 +114,5 @@ void RunConfiguration::clear(){
     _seeds.clear();
     _mangling = true;
     _check_for_data_loss = false;
+    _config_from_file = false;
 }

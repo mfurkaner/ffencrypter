@@ -15,6 +15,8 @@ class Application{
     FileHandler fileHandler;
     EncryptedHeader header;
     std::string command;
+    bool shouldRun = true;
+    bool shouldRunOnce = false;
 
     std::string text;
     std::string out_text;
@@ -68,7 +70,7 @@ class Application{
 
     void reset();
 public:
-    Application(const std::string& config_path) : _configuration(config_path){}
+    Application(const std::string& config_path) : _configuration(config_path){shouldRunOnce = true;}
     Application(const RunConfiguration& configuration) : _configuration(configuration){}
     
     void Run();

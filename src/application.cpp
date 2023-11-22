@@ -1,5 +1,6 @@
 #include "../inc/application.hpp"
 #include <cmath>
+#include <fstream>
 
 extern uint64_t hash_str(const char * s);
 
@@ -140,7 +141,7 @@ void Application::_handleUnmangling(std::vector<uint8_t>& bin) const {
 
 void Application::_updateCommand() {
     if (!_configuration.isConfigFromFile()) {
-        std::cout << "Enter a command ( enc : encrypt, dec : decrypt, pdif : print diff, exit : exit) : ";
+        std::cout << "\nEnter a command ( enc : encrypt, dec : decrypt, runconfig : run a config file, pdif : print diff,  exit : exit) : ";
         std::cin >> command;
         return;
     }
@@ -172,13 +173,16 @@ void Application::_updateOutputPath(){
         _configuration.setFileOut(fileout);
     }
 
-    if (fileout == "."){
+    if (fileout == "." || fileout == ""){
         std::string filepath = _configuration.getFilePath();
         if ( state == Encrypting){
-            _configuration.setFileOut( filepath.substr(0, filepath.find_last_of('.')) + ".enc" );
+            _configuration.setFileOut( filepath.substr(0, filepath.find_last_of('.')) + "_enc." + filepath.substr(filepath.find_last_of('.') + 1) );
         }
-        else if(filepath.find(".enc")){
-            _configuration.setFileOut( filepath.substr(0, filepath.find_last_of('.')) + "_dec" + ".txt" );
+        else{
+            if(filepath.find("_enc") != std::string::npos){
+                filepath = filepath.substr(0, filepath.find_last_of("_")) + filepath.substr(filepath.find_last_of('.') );
+            }
+            _configuration.setFileOut( filepath.substr(0, filepath.find_last_of('.')) + "_dec." + filepath.substr(filepath.find_last_of('.') + 1) );
         }
     }
 }
@@ -199,10 +203,14 @@ uint32_t Application::_getLayerNumber() const{
 
 void Application::_getSeedFromUserUntil(uint32_t num){
     if (_configuration.isConfigFromFile()) return;
+    _configuration.clearSeeds();
     while( _configuration.getSeeds().size() < num ){
-        std::cout << "Enter a seed : ";
+        std::cout << "Enter a seed : " << std::flush;
         std::string seed;
-        std::cin >> seed;
+        do{
+            std::getline(std::cin, seed);
+        }while(seed.empty());
+
         _configuration.addSeed(seed);
     }
 }
@@ -332,7 +340,8 @@ void Application::handleDecryption(){
     std::vector<uint8_t> decrypted_b = binary;
     _updateOutputPath();
     uint32_t layerCount = _getLayerNumber();
-
+    _getSeedFromUserUntil(layerCount);
+    
     if(_configuration.isBinaryFile()){
         _handleUnmangling(decrypted_b);
         _Decrypt(decrypted_b, layerCount);
@@ -352,10 +361,12 @@ bool Application::handleCommand(){
     if(command == "enc"){
         state = Encrypting;
         handleEncryption();
+        _configuration.clear();
     }
     else if ( command == "dec" ){
         state = Decrypting;
         handleDecryption();
+        _configuration.clear();
     }
     else if ( command == "pdif" ){
         std::string path1;
@@ -366,17 +377,33 @@ bool Application::handleCommand(){
         std::cin >> path2;
         FileHandler::printDifferencesOfFiles(path1, path2);
     }
-    else if ( command == "settings"){
+    else if ( command == "runconfig"){
+        std::string path;
+        std::cout << "Path of the configuration file ('.' for default : 'config.in'): ";
+        std::cin >> path;
 
+        if( path == "." ){
+            path = "config.in";
+        }
+        std::ifstream is(path, std::ios::in);
+        if(is.good()){
+            is.close();
+            _configuration.getConfigurationFromFile(path);
+            return true;
+        }
+        else{
+            std::cerr << "Sorry, the configuration file does not exist.\n"; 
+            return false;
+        }
     }
     else if( command == "exit" ){
-        return false;
+        shouldRun = false;
     }
     else{
         std::cerr << "Command \'" << command << "\' is invalid." << std::endl;
     }
 
-    return !_configuration.isConfigFromFile();
+    return !shouldRunOnce && shouldRun;
 }
 
 void Application::reset(){

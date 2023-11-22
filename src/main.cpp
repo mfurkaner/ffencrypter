@@ -7,18 +7,23 @@
 
 int main(int argc, char *argv[]){
     std::string config_file = "config.in";
-    bool command_line = false;
+    bool command_line = true;
     if(argc > 1){
-        if (strcmp(argv[0], "-cl")){
-            command_line = true;
-        }
         if(argc > 2 && strcmp(argv[0], "-c") == 0){
             config_file = argv[1];
+            command_line = false;
         }
     }
 
-    Application App(config_file);
-    App.Run();
+    if(command_line){
+        RunConfiguration rc;
+        Application App(rc);
+        App.Run();
+    }
+    else{
+        Application App(config_file);
+        App.Run();
+    }
 
     //std::string a;
     //std::getline(std::cin, a);

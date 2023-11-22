@@ -54,7 +54,7 @@ uint32_t FileHandler::printOnlyDifferences(const std::string& t1, const std::str
     uint32_t count = 0;
     for(uint32_t i = 0; i < t1.size() && i < t2.size() ; i++){
         if( t1.at(i) != t2.at(i) ){
-            std::cout << "They differ at " << i << " : t1=" << t1.at(i) << " t2=" << t2.at(i) << std::endl; 
+            std::cout << "They differ at " << i << " : t1=" << t1.at(i) << " t2=" << t2.at(i) << "\n"; 
             count++;
         }
     }
@@ -65,7 +65,7 @@ uint32_t FileHandler::printOnlyDifferences(const std::vector<uint8_t>& t1, const
     uint32_t count = 0;
     for(uint32_t i = 0; i < t1.size() && i < t2.size() ; i++){
         if( t1.at(i) != t2.at(i) ){
-            std::cout << "They differ at " << i << " : t1=" << static_cast<char>(t1.at(i)) << " t2=" <<static_cast<char>(t2.at(i)) << std::endl; 
+            std::cout << "They differ at " << i << " : t1=" << static_cast<char>(t1.at(i)) << " t2=" <<static_cast<char>(t2.at(i)) << "\n";
             count++;
         }
     }
@@ -73,7 +73,15 @@ uint32_t FileHandler::printOnlyDifferences(const std::vector<uint8_t>& t1, const
 }
 
 void FileHandler::printDifferences(const std::string& t1, const std::string& t2){
-    uint32_t count = printOnlyDifferences(t1, t2);
+    uint32_t count = 0;
+    for(uint32_t i = 0; i < t1.size() && i < t2.size() ; i++){
+        if( t1.at(i) != t2.at(i) ){
+            count++;
+        }
+    }
+    if(count < 50){
+        printOnlyDifferences(t1, t2);
+    }
     std::cout << "Size of t1 : " << t1.size() << "  size of t2 : " << t2.size() << std::endl;
     std::cout << "Total diff : " << count << std::endl;
 }

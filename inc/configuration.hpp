@@ -70,6 +70,14 @@ public:
     void clearSeeds(){_seeds.clear();}
     void reverseFilePaths(){std::string fileholder = _filepath; _filepath = _fileout; _fileout = fileholder;}
 
+    void getConfigurationFromFile(const std::string& config_path){
+        clear();
+        _config_path = config_path;
+        _config_from_file = true;
+        _fileHandler.setFilePath(config_path); 
+        _getConfig();
+    }
+
 
     void clear();
     bool isEmpty();
