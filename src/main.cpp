@@ -19,15 +19,12 @@ int main(int argc, char *argv[]){
         RunConfiguration rc;
         Application App(rc);
         App.Run();
+        system("pause");
     }
     else{
         Application App(config_file);
         App.Run();
     }
-
-    //std::string a;
-    //std::getline(std::cin, a);
-    system("pause");
 
     return 0;
 }
