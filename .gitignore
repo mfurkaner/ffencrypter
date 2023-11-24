@@ -7,6 +7,17 @@
 *.o
 *.so
 
+*.v6.1
+*.v2
+*.vsidx
+*.lock
+*.vs
+**/bin/**
+**/obj/**
+*.cashe
+*.pdb
+*.resources
+
 # OS generated files #
 ######################
 .DS_Store

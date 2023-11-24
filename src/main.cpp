@@ -9,8 +9,8 @@ int main(int argc, char *argv[]){
     std::string config_file = "config.in";
     bool command_line = true;
     if(argc > 1){
-        if(argc > 2 && strcmp(argv[0], "-c") == 0){
-            config_file = argv[1];
+        if("-c" == std::string(argv[1]) ){
+            config_file = argv[2];
             command_line = false;
         }
     }

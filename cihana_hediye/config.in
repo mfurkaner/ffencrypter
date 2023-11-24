@@ -1,14 +1,14 @@
-id = zeynep61
-pass = sanane...
+id = cihan
+pass = gencal
 command = dec
-filepath = cihana_hediye_enc.zip
-fileout = cihana_hediye_dec.zip
-addseed = 'zeynebi cok seviyorum'
-addseed = 'furkani cok seviyorum'
-addseed = 'denizi cok seviyorum'
-
+filepath = cok_onemli_jpeg.enc
+fileout = cok_onemli_jpeg.jpeg
+addseed = 'benim adim cihan'
+addseed = 'canim cok sikilir'
+addseed = 'xdxdxd'
 mangling = 1
-depth = 5
+depth = 3
+
 check = 1
 
 
