@@ -16,15 +16,22 @@ Decypt screen<br />
 Can generate and use 'seedfiles' for convinience<br />
 <br />
 <img src="repo/enc_dia.png"/><br />
+Encyption dialog<br />
 <br />
 <img src="repo/adv.png"/><br />
-
+Advanced settings dialog<br />
 
 # When building for the first time <br />
 <br />
--> use bash scripts in scripts/ directory for convenience <br />
 -> install cmake to build and run the app with ease <br />
--> you can also edit & use the scripts with the compiler of your choise <br />
+```bash
+#!/bin/bash
+cd build ; cmake -DCMAKE_BUILD_TYPE=Release . ; cmake --build . --config Release    
+```<br />
+-> use Visual Studio 2022 to build and release the GUI
+```powershell
+dotnet publish -c Release -r win-x64 --self-contained       
+```<br />
 
 # Using zEncrypter with a config file
 Create a file named 'config.in' using the following options  <br />
