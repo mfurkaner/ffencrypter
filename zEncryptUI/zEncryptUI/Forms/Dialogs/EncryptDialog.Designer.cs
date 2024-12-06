@@ -1,4 +1,5 @@
 ﻿using System.Resources;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace zEntryptUI.Forms.Dialogs
 {
@@ -32,7 +33,10 @@ namespace zEntryptUI.Forms.Dialogs
         {
             SuspendLayout();
             Icon = new Icon("resources\\enc-icon.ico");
-            encDecButton.Text = "Şifrele";
+            encDecButton.Text = "   Şifrele";
+            encDecButton.Image = Image.FromFile("resources\\enc-icon.png").GetThumbnailImage(20, 20, null, new IntPtr());
+            encDecButton.ImageAlign = ContentAlignment.MiddleRight;
+            encDecButton.TextAlign = ContentAlignment.MiddleLeft;
             encDecButton.Click += EncButton_Click;
             // 
             // EncryptDialog
@@ -56,9 +60,25 @@ namespace zEntryptUI.Forms.Dialogs
 
             var serviceHandler = ServiceHandler.GetInstance();
             serviceHandler.configPath = Path.GetFullPath("resources\\config.in");
-            serviceHandler.StartEngine();
+            var res = serviceHandler.StartEngine();
 
             File.Delete("resources\\config.in");
+
+            var res_lines = res.Split('\n');
+            bool succ = false;
+            foreach ( var line in res_lines )
+            {
+                if (line.Contains("No data loss detected after encryption."))
+                {
+                    succ = true;
+                    break;
+                }
+            }
+
+            if(succ)
+                MessageBox.Show("Şifreleme işlemi başarıyla tamamlandı.", "Şifreleme Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly, false);
+            else
+                MessageBox.Show("Şifreleme sırasında bir hata ile karşılaşıldı.", "Şifreleme Başarısız", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly, false);
         }
 
         #endregion

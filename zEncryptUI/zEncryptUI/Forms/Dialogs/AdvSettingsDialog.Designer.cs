@@ -71,7 +71,7 @@
             depth.Name = "depth";
             depth.Size = new Size(39, 25);
             depth.TabIndex = 2;
-            depth.Value = new decimal(new int[] { 5, 0, 0, 0 });
+            depth.Value = new decimal(new int[] { 10, 0, 0, 0 });
             depth.ValueChanged += depth_ValueChanged;
             // 
             // depthLabel
@@ -125,7 +125,7 @@
         {
             mangle.Checked = true;
             binary.Checked = true;
-            depth.Value = 5;
+            depth.Value = 10;
         }
 
         private void OkButton_Click(object sender, EventArgs e)

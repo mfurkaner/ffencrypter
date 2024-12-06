@@ -19,6 +19,9 @@
     <Compile Update="Forms\EncryptForm.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Update="Forms\GenSeedfileForm.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Update="Forms\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -8,19 +8,21 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace zEntryptUI.Forms.Dialogs
+namespace zEncryptUI.Forms
 {
-    public partial class EncDecDialog : Form
+    public partial class GenSeedfileForm : TabPage
     {
-        public EncDecDialog(Form owner)
+        public GenSeedfileForm(Form owner)
         {
-            Owner = owner;
+            this.owner = owner;
             InitializeComponent();
         }
 
-        private void seedfilePath_Click(object sender, EventArgs e)
+        private void label1_Click(object sender, EventArgs e)
         {
 
         }
+
+
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace zEntryptUI.Forms
+﻿using zEncryptUI.Forms;
+
+namespace zEntryptUI.Forms
 {
     partial class MainForm
     {
@@ -30,6 +32,7 @@
         {
             encryptForm = new EncryptForm(this);
             decryptForm = new DecryptForm(this);
+            genSeedfileForm = new GenSeedfileForm(this);
             Icon = new Icon("resources\\app-icon.ico");
             SuspendLayout();
             this.components = new System.ComponentModel.Container();
@@ -37,7 +40,7 @@
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Text = "zEncrypter GUI";
 
-            tabControl.Controls.AddRange(new Control[] {encryptForm, decryptForm});
+            tabControl.Controls.AddRange(new Control[] {encryptForm, decryptForm, genSeedfileForm});
             tabControl.Location = new Point(0, 0);
             tabControl.Size = new Size(600, 250);
 
@@ -54,6 +57,7 @@
 
         private EncryptForm encryptForm;
         private DecryptForm decryptForm;
+        private GenSeedfileForm genSeedfileForm;
         private TabControl tabControl = new TabControl();
     }
 }

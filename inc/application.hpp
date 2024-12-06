@@ -53,6 +53,9 @@ class Application{
     void _updateOutputPath();
     uint32_t _getLayerNumber() const;
 
+    void _generatePlainSeedFile();
+    std::vector<std::string> _getSeedsFromDecryptedSeedFile(const std::string& seedfile);
+
     void _Encrypt(std::string& str, uint32_t num);
     void _Encrypt(std::vector<uint8_t>& bin, uint32_t num);
 
@@ -61,6 +64,9 @@ class Application{
 
     void handleEncryption();
     void handleDecryption();
+    void handleGenSeedFile();
+    void handleReadSeedFile();
+    void handleGetSeedFile();
     bool handleCommand();
 
     void printWelcomeMessage();

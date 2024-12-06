@@ -24,12 +24,14 @@ class RunConfiguration : public Configuration{
     std::string _command;
     std::string _filepath;
     std::string _fileout = ".";
+    std::string _seedfile;
     std::string _id;
     std::string _password;
     std::vector<std::string> _seeds;
     bool _mangling = true;
     bool _check_for_data_loss = false;
     bool _binfile = true;
+    bool _use_seed_file = false;
     int _depth = 10;
 
     bool _getConfig();
@@ -44,6 +46,7 @@ public:
     const std::string& getCommand() const { return _command; }
     const std::string& getFilePath() const { return _filepath; }
     const std::string& getFileOut() const{ return _fileout; }
+    const std::string& getSeedFile() const{ return _seedfile; }
     const std::string& getID() const { return _id; }
     const std::string& getPassword() const { return _password; }
     const int getDepth() const { return _depth; }
@@ -52,6 +55,7 @@ public:
         if (_seeds.size() > index) return _seeds[index];
         return nullstr;  
     }
+    bool isUsingSeedFile() const { return _use_seed_file; }
     bool isBinaryFile() const {return _binfile;}
     bool isManglingEnabled() const { return _mangling; }
     bool isDataLossCheckEnabled() const { return _check_for_data_loss; }
@@ -82,11 +86,12 @@ public:
     void clear();
     bool isEmpty();
 
+    void printConfig();
 };
 
 enum ConfigurationIndex{
-    filepath_, fileout_, id_, pass_, seed_,
-    mangling_, datalosscheck_, command_,
+    filepath_, fileout_, id_, pass_, seedfile_,
+    seed_, mangling_, datalosscheck_, command_,
     binfile_, depth_,
 
     endofconfig

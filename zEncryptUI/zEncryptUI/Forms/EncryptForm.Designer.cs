@@ -82,7 +82,7 @@ namespace zEntryptUI
 
                 var dotIndex = input.LastIndexOf('.');
                 var dotIndexAct = actual_input.LastIndexOf('.');
-                if (dotIndex == -1)
+                if (dotIndex == -1 || dotIndexAct == -1)
                     outputFilenameText.Text = input + "_enc";
                 else
                     outputFilenameText.Text = input.Substring(0, dotIndex) + "_enc" + input.Substring(dotIndex);

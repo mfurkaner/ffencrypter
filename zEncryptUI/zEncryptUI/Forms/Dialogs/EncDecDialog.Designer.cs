@@ -41,15 +41,19 @@ namespace zEntryptUI.Forms.Dialogs
             cancelEncButton = new Button();
             seedListLable = new Label();
             toolTip = new ToolTip(components);
+            manualSeeds = new CheckBox();
+            selectSeedfileButton = new Button();
+            seedfilePath = new Label();
             SuspendLayout();
             // 
             // seedList
             // 
             seedList.FormattingEnabled = true;
-            seedList.Location = new Point(109, 115);
+            seedList.Location = new Point(177, 145);
             seedList.Name = "seedList";
-            seedList.Size = new Size(325, 23);
+            seedList.Size = new Size(251, 23);
             seedList.TabIndex = 0;
+            seedList.Visible = false;
             seedList.SelectedIndexChanged += SeedList_SelectedIndexChanged;
             seedList.KeyUp += SeedList_KeyUp;
             seedList.MouseHover += SeedList_MouseHover;
@@ -61,6 +65,7 @@ namespace zEntryptUI.Forms.Dialogs
             idBox.Name = "idBox";
             idBox.Size = new Size(193, 23);
             idBox.TabIndex = 5;
+            idBox.TextChanged += idBox_TextChanged;
             // 
             // passBox
             // 
@@ -71,6 +76,7 @@ namespace zEntryptUI.Forms.Dialogs
             passBox.Size = new Size(193, 23);
             passBox.TabIndex = 6;
             passBox.MouseHover += PassBox_MouseHover;
+            passBox.TextChanged += passBox_TextChanged;
             // 
             // idLabel
             // 
@@ -97,19 +103,19 @@ namespace zEntryptUI.Forms.Dialogs
             encDecButton.Size = new Size(112, 32);
             encDecButton.TabIndex = 10;
             encDecButton.UseVisualStyleBackColor = true;
+            encDecButton.Enabled = false;
             // 
             // advSettingsButton
             // 
             advSettingsButton.ImageAlign = ContentAlignment.MiddleRight;
-            advSettingsButton.Location = new Point(160, 156);
+            advSettingsButton.Location = new Point(177, 182);
             advSettingsButton.Name = "advSettingsButton";
-            advSettingsButton.Size = new Size(130, 29);
+            advSettingsButton.Size = new Size(99, 29);
             advSettingsButton.TabIndex = 11;
             advSettingsButton.Text = "Gelişmiş Ayarlar";
             advSettingsButton.TextAlign = ContentAlignment.MiddleLeft;
             advSettingsButton.UseVisualStyleBackColor = true;
             advSettingsButton.Click += AdvSettingsButton_Click;
-            advSettingsButton.Image = Image.FromFile("resources\\adv-set-icon.png").GetThumbnailImage(20, 20, null, new IntPtr());
             // 
             // cancelEncButton
             // 
@@ -124,17 +130,55 @@ namespace zEntryptUI.Forms.Dialogs
             // seedListLable
             // 
             seedListLable.AutoSize = true;
-            seedListLable.Location = new Point(12, 118);
+            seedListLable.Location = new Point(51, 151);
             seedListLable.Name = "seedListLable";
-            seedListLable.Size = new Size(79, 15);
+            seedListLable.Size = new Size(67, 15);
             seedListLable.TabIndex = 14;
-            seedListLable.Text = "Tohum Listesi";
+            seedListLable.Text = "Seed Listesi";
+            seedListLable.Visible = false;
+            // 
+            // manualSeeds
+            // 
+            manualSeeds.Location = new Point(162, 115);
+            manualSeeds.Name = "manualSeeds";
+            manualSeeds.Size = new Size(157, 24);
+            manualSeeds.TabIndex = 0;
+            manualSeeds.Text = "Manuel seed seçimi";
+            manualSeeds.Click += ManualSeed_Click;
+            // 
+            // selectSeedfileButton
+            // 
+            selectSeedfileButton.ImageAlign = ContentAlignment.MiddleRight;
+            selectSeedfileButton.Location = new Point(41, 145);
+            selectSeedfileButton.Name = "selectSeedfileButton";
+            selectSeedfileButton.Size = new Size(102, 26);
+            selectSeedfileButton.TabIndex = 11;
+            selectSeedfileButton.Text = "Seed dosyası";
+            selectSeedfileButton.TextAlign = ContentAlignment.MiddleLeft;
+            selectSeedfileButton.UseVisualStyleBackColor = true;
+            selectSeedfileButton.Click += selectSeedfile_Click;
+            selectSeedfileButton.Image = Image.FromFile("resources\\open-file-icon.jpg").GetThumbnailImage(20, 20, null, new IntPtr());
+            selectSeedfileButton.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // seedfilePath
+            // 
+            seedfilePath.AutoSize = true;
+            seedfilePath.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            seedfilePath.Location = new Point(162, 148);
+            seedfilePath.Name = "seedfilePath";
+            seedfilePath.Size = new Size(136, 15);
+            seedfilePath.TabIndex = 7;
+            seedfilePath.Text = "Seed dosyası seçilmedi!";
+            seedfilePath.Click += seedfilePath_Click;
             // 
             // EncDecDialog
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(456, 267);
+            Controls.Add(manualSeeds);
+            Controls.Add(selectSeedfileButton);
+            Controls.Add(seedfilePath);
             Controls.Add(seedListLable);
             Controls.Add(cancelEncButton);
             Controls.Add(advSettingsButton);
@@ -148,6 +192,105 @@ namespace zEntryptUI.Forms.Dialogs
             Text = "Encrypt Dialog";
             ResumeLayout(false);
             PerformLayout();
+        }
+
+        private void shouldEncDecBeEnabled()
+        {
+            bool encDecEnabled = passBox.Text.Length > 0 && idBox.Text.Length > 0;
+
+            if (manualSeeds.Checked)
+            {
+                encDecEnabled = encDecEnabled && seedList.Items.Count > 0;
+            }
+            else
+            {
+                encDecEnabled = encDecEnabled && canUseSeedfile;
+            }
+
+            encDecButton.Enabled = encDecEnabled;
+        }
+
+        private void passBox_TextChanged(object sender, EventArgs e)
+        {
+            shouldEncDecBeEnabled();
+        }
+
+        private void idBox_TextChanged(object sender, EventArgs e)
+        {
+            shouldEncDecBeEnabled();
+        }
+
+        private void selectSeedfile_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+
+            // Set dialog properties
+            openFileDialog.Filter = "Seedfiles (*.sf)|*.sf|All Files (*.*)|*.*"; // Filter to .sf files
+            openFileDialog.Title = "Select an Seedfile";
+            openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments); // Optional
+
+            // Show the dialog and check if a file was selected
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                // Get the selected file path
+                string selectedFilePath = openFileDialog.FileName;
+
+                seedfilePath.Text = selectedFilePath;
+                canUseSeedfile = false;
+                seedfilePath.ForeColor = Color.DarkRed;
+                shouldEncDecBeEnabled();
+
+                var conf = Configurator.GetInstance();
+
+                conf.SaveConfig("dummyfile.in");
+                conf.ResetConfig();
+
+                conf.SetCommand("readsf");
+                conf.SetID(idBox.Text);
+                conf.SetPass(passBox.Text);
+                conf.SetInFilepath(seedfilePath.Text);
+
+                conf.SaveConfig("resources\\config.in");
+
+                conf.ReadFromFile("dummyfile.in");
+                File.Delete("dummyfile.in");
+
+                var shand = ServiceHandler.GetInstance();
+
+                var res = shand.StartEngine("resources\\config.in");
+                File.Delete("resources\\config.in");
+
+                var lines = res.Split('\n');
+
+                foreach (var line in lines)
+                {
+                    if (line.Contains("Total seeds : "))
+                    {
+                        var sline = line.Remove(0, line.IndexOf(':') + 1);
+                        if (int.Parse(sline) > 0)
+                        {
+                            canUseSeedfile = true;
+                            seedfilePath.ForeColor = Color.DarkGreen;
+                            shouldEncDecBeEnabled();
+                            break;
+                        }
+                    }
+                }
+            }
+
+
+
+
+        }
+
+        private void ManualSeed_Click(object sender, EventArgs e)
+        {
+            seedList.Visible = manualSeeds.Checked;
+            seedListLable.Visible = manualSeeds.Checked;
+
+            selectSeedfileButton.Visible = manualSeeds.Checked == false;
+            seedfilePath.Visible = manualSeeds.Checked == false;
+            shouldEncDecBeEnabled();
         }
 
         private void AdvSettingsButton_Click(object sender, EventArgs e)
@@ -211,7 +354,7 @@ namespace zEntryptUI.Forms.Dialogs
                 {
                     seedList.BackColor = Color.PaleVioletRed;
                 }
-
+                shouldEncDecBeEnabled();
             }
         }
 
@@ -223,17 +366,26 @@ namespace zEntryptUI.Forms.Dialogs
             configurator.SetPass(passBox.Text);
             configurator.SetCommand(command);
 
-            List<string> seeds = new List<string>();
-            foreach (var seed in seedList.Items)
+            if (manualSeeds.Checked)
             {
-                seeds.Add(seed.ToString());
+                List<string> seeds = new List<string>();
+                foreach (var seed in seedList.Items)
+                {
+                    seeds.Add(seed.ToString());
+                }
+
+                configurator.SetSeeds(seeds);
             }
-            configurator.SetSeeds(seeds);
+            else
+            {
+                configurator.SetSeedfile(seedfilePath.Text);
+            }
+
+
         }
         #endregion
 
-        protected ComboBox seedList;
-        protected int _selectedSeedIndex = -1;
+
 
         protected TextBox idBox;
         protected TextBox passBox;
@@ -242,6 +394,16 @@ namespace zEntryptUI.Forms.Dialogs
         protected Button encDecButton;
         protected Button advSettingsButton;
         protected Button cancelEncButton;
+
+        protected CheckBox manualSeeds;
+
+        protected Button selectSeedfileButton;
+        protected bool canUseSeedfile = false;
+        protected Label seedfilePath;
+
+        protected ComboBox seedList;
+        protected int _selectedSeedIndex = -1;
+
         protected Label seedListLable;
 
         protected ToolTip toolTip;

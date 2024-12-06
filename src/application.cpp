@@ -1,6 +1,7 @@
 #include "../inc/application.hpp"
 #include <cmath>
 #include <fstream>
+#include <sstream>
 
 extern uint64_t hash_str(const char * s);
 
@@ -141,7 +142,7 @@ void Application::_handleUnmangling(std::vector<uint8_t>& bin) const {
 
 void Application::_updateCommand() {
     if (!_configuration.isConfigFromFile()) {
-        std::cout << "\nEnter a command ( enc : encrypt, dec : decrypt, runconfig : run a config file, pdif : print diff,  exit : exit) : ";
+        std::cout << "\nEnter a command \n # enc : encrypt\n # dec : decrypt\n # runconfig : run a config file\n # gensf : generate a seed file\n # readsf : read the seeds in a seedfile\n # pdif : print diff\n # exit : exit\n -> ";
         std::cin >> command;
         return;
     }
@@ -217,6 +218,38 @@ void Application::_getSeedFromUserUntil(uint32_t num){
 
 const std::string& Application::_getSeed(uint32_t index) {
     return _configuration.getSeed(index);
+}
+
+void Application::_generatePlainSeedFile(){
+    auto seeds = _configuration.getSeeds();
+    text.clear();
+    text += _configuration.getID() + "\n";
+    text += std::to_string(hash_str(_configuration.getPassword().c_str())) + "\n";
+    for(int i = 0; i < seeds.size(); i++){
+        //std::cout << "Adding seed to seedfile : " << seeds[i] << "\n";
+        text += seeds[i] + (i + 1 >= seeds.size() ? "" : "\n");
+    }
+}
+
+std::vector<std::string> Application::_getSeedsFromDecryptedSeedFile(const std::string& seedfile){
+    std::vector<std::string> seeds;
+
+    std::stringstream ss(seedfile.c_str());
+    std::string line;
+    std::string pwline = std::to_string(hash_str(_configuration.getPassword().c_str()));
+    bool idfound = false, pwfound = false;
+    while(std::getline(ss, line)){
+        if(idfound){
+            if(pwfound)
+                seeds.push_back(line);
+            else
+                pwfound = line == pwline;
+        }
+        else
+            idfound = line == _configuration.getID();
+    }
+
+    return seeds;
 }
 
 void Application::_Encrypt(std::string& str, uint32_t num){
@@ -312,13 +345,23 @@ bool Application::_checkForDataLoss(const std::vector<uint8_t>& out){
 
 
 void Application::handleEncryption(){
+    if ( _configuration.isUsingSeedFile() ){
+        std::string filepath = _configuration.getFilePath();
+        _configuration.setFilePath(_configuration.getSeedFile());
+        handleGetSeedFile();
+        state = Encrypting;
+        _configuration.setFilePath(filepath);
+    }
     if ( ! _handleReading() ) return;
     std::string encrypted_t = text;
     std::vector<uint8_t> encrypted_b = binary;
     _updateCretentials();
     _updateOutputPath();
+
     uint32_t layerCount = _getLayerNumber();
     _getSeedFromUserUntil(layerCount);
+
+
     if(_configuration.isBinaryFile()){
         _Encrypt(encrypted_b, layerCount);
         _handleMangling(encrypted_b);
@@ -334,11 +377,20 @@ void Application::handleEncryption(){
 }
 
 void Application::handleDecryption(){
+    if ( _configuration.isUsingSeedFile() ){
+        std::string filepath = _configuration.getFilePath();
+        _configuration.setFilePath(_configuration.getSeedFile());
+        handleGetSeedFile();
+        state = Decrypting;
+        _configuration.setFilePath(filepath);
+    }
     _updateCretentials();
     if ( ! _handleReading() ) return;
     std::string decrypted_t = text;
     std::vector<uint8_t> decrypted_b = binary;
     _updateOutputPath();
+
+
     uint32_t layerCount = _getLayerNumber();
     _getSeedFromUserUntil(layerCount);
     
@@ -352,6 +404,69 @@ void Application::handleDecryption(){
         _Decrypt(decrypted_t, layerCount);
         _handleWriting(decrypted_t);
     }
+}
+
+void Application::handleGenSeedFile(){
+    // Setup the configuration
+    _updateCretentials();
+    _updateOutputPath();
+
+    uint32_t layerCount = _getLayerNumber();
+    _getSeedFromUserUntil(layerCount);
+
+    // Create the seedfile
+    _generatePlainSeedFile();
+
+    // Create the encrypting seeds
+    _configuration.clearSeeds();
+    _configuration.addSeed(_configuration.getID());
+    _configuration.addSeed(_configuration.getPassword());
+    _configuration.addSeed(std::to_string(hash_str(_configuration.getID().c_str())));
+    _configuration.addSeed(std::to_string(hash_str(_configuration.getPassword().c_str())));
+    _configuration.addSeed(std::to_string(hash_str((_configuration.getPassword() + _configuration.getID()).c_str())));
+
+
+    _configuration.setFilePath("Seedfile");
+    
+    state = Encrypting;
+    std::vector<uint8_t> encrypted_b(text.begin(), text.end());
+
+    _Encrypt(encrypted_b, 5);
+    _handleMangling(encrypted_b);
+    bool nodataloss = _checkForDataLoss(encrypted_b);
+    if (nodataloss) _handleWriting(encrypted_b);
+}
+
+void Application::handleReadSeedFile(){
+    handleGetSeedFile();
+
+    std::cout << "Read the seed file : \n";
+    for(auto seed : _configuration.getSeeds())
+        std::cout << seed << std::endl;
+    std::cout << "Total seeds : " << _configuration.getSeeds().size() << std::endl;
+}
+
+void Application::handleGetSeedFile(){
+    state = Decrypting;
+    _updateCretentials();
+    if ( ! _handleReading() ) return;
+    std::vector<uint8_t> decrypted_b = (_configuration.isBinaryFile() ? binary : std::vector<uint8_t>(text.begin(), text.end()));
+
+    // Set the decryption seeds
+    _configuration.clearSeeds();
+    _configuration.addSeed(_configuration.getID());
+    _configuration.addSeed(_configuration.getPassword());
+    _configuration.addSeed(std::to_string(hash_str(_configuration.getID().c_str())));
+    _configuration.addSeed(std::to_string(hash_str(_configuration.getPassword().c_str())));
+    _configuration.addSeed(std::to_string(hash_str((_configuration.getPassword() + _configuration.getID()).c_str())));
+
+    _handleUnmangling(decrypted_b);
+    _Decrypt(decrypted_b, 5);
+    auto seeds = _getSeedsFromDecryptedSeedFile(std::string(decrypted_b.begin(), decrypted_b.end()));
+
+    _configuration.clearSeeds();
+    for(auto seed : seeds)
+        _configuration.addSeed(seed);
 }
 
 bool Application::handleCommand(){
@@ -396,6 +511,16 @@ bool Application::handleCommand(){
             return false;
         }
     }
+    else if ( command == "gensf"){
+        state = Encrypting;
+        handleGenSeedFile();
+        _configuration.clear();
+    }
+    else if ( command == "readsf"){
+        state = Decrypting;
+        handleReadSeedFile();
+        _configuration.clear();
+    }
     else if( command == "exit" ){
         shouldRun = false;
     }
@@ -415,6 +540,8 @@ void Application::reset(){
 
 void Application::Run(){
     printWelcomeMessage();
+
+    _configuration.printConfig();
 
     while (handleCommand());
 

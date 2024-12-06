@@ -32,7 +32,10 @@ namespace zEntryptUI.Forms.Dialogs
         {
             SuspendLayout();
             Icon = new Icon("resources\\dec-icon.ico");
-            encDecButton.Text = "Çöz";
+            encDecButton.Text = "    Çöz";
+            encDecButton.Image = Image.FromFile("resources\\dec-icon.png").GetThumbnailImage(20, 20, null, new IntPtr());
+            encDecButton.ImageAlign = ContentAlignment.MiddleRight;
+            encDecButton.TextAlign = ContentAlignment.MiddleLeft;
             encDecButton.Click += DecButton_Click;
             // 
             // EncryptDialog
@@ -59,9 +62,25 @@ namespace zEntryptUI.Forms.Dialogs
 
             var serviceHandler = ServiceHandler.GetInstance();
             serviceHandler.configPath = Path.GetFullPath("resources\\config.in");
-            serviceHandler.StartEngine();
+            var res = serviceHandler.StartEngine();
 
             File.Delete("resources\\config.in");
+
+            var res_lines = res.Split('\n');
+            bool succ = false;
+            foreach (var line in res_lines)
+            {
+                if (line.Contains("is decrypted and written to"))
+                {
+                    succ = true;
+                    break;
+                }
+            }
+
+            if (succ)
+                MessageBox.Show("Çözme işlemi başarıyla tamamlandı.", "Çözme Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            else
+                MessageBox.Show("Çözme işlemi sırasında bir hata ile karşılaşıldı.", "Çözme Başarısız", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         #endregion

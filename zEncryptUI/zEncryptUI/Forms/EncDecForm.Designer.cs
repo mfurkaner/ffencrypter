@@ -98,13 +98,33 @@
             Controls.Add(findButton);
             Controls.Add(encDecButton);
             Size = new Size(500, 300);
+            Enter += onEnterForm;
             ResumeLayout(false);
             PerformLayout();
         }
 
-        protected void EncDecForm_Load(object sender, EventArgs e)
+        private void onEnterForm(object sender, EventArgs e)
         {
-            //throw new NotImplementedException();
+            if (owner != null)
+            {
+                // Define the desired client size of the current form
+                ClientSize = new Size(600, 250);
+
+                // Resize the owner form to accommodate the current form, including borders
+                owner.Size = new Size(600, 280);
+
+                // Optional: Adjust the size of the TabControl inside the form if necessary
+                foreach (Control control in owner.Controls)
+                {
+                    if (control is TabControl tabControl)
+                    {
+                        tabControl.Dock = DockStyle.Fill; // Ensures it fills the form
+                    }
+                }
+
+                PerformLayout();
+                owner.PerformLayout();
+            }
         }
 
         protected void inputFilenameText_MouseMove(object sender, MouseEventArgs e)

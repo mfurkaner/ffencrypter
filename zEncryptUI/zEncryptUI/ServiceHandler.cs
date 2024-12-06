@@ -25,16 +25,33 @@ namespace zEntryptUI
         public const string servicePath = "resources\\zEncrypter.exe";
         public string configPath = "config.in";
 
-        public void StartEngine()
+        public string StartEngine(string configpath = "")
         {
+            if (configpath == string.Empty)
+                configpath = configPath;
             Process process = new Process();
             // Configure the process using the StartInfo properties.
             process.StartInfo.FileName = servicePath;
             process.StartInfo.ArgumentList.Add("-c");
-            process.StartInfo.ArgumentList.Add(configPath);
-            process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
+            process.StartInfo.ArgumentList.Add(configpath);
+            process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            process.StartInfo.CreateNoWindow = true; // Prevent creating a new window
+
+            // Redirect standard output and error
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.RedirectStandardError = true;
+            process.StartInfo.UseShellExecute = false; // Required for redirection
+
+            // Start the process
             process.Start();
+
+            // Read the output streams
+            string standardOutput = process.StandardOutput.ReadToEnd();
+            string errorOutput = process.StandardError.ReadToEnd();
+
             process.WaitForExit();
+
+            return standardOutput;
         }
     }
 }

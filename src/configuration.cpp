@@ -4,14 +4,14 @@
 
 const char* const AVAILABLE_CONFIGURATIONS[endofconfig] = {
     "filepath", "fileout", 
-    "id", "pass", "addseed", 
+    "id", "pass", "seedfile", "addseed", 
     "mangling", "check", "command",
     "binfile", "depth"
 };
 
 const char* const AVAILABLE_TR_CONFIGURATIONS[endofconfig] = {
     "konum", "kayit", 
-    "id", "sifre", "tohumekle", 
+    "id", "sifre", "tohumdosyasi", "tohumekle", 
     "calkala", "kontrol", "komut",
     "bindosyasi"
 };
@@ -49,15 +49,22 @@ bool RunConfiguration::_getConfig(){
         switch (config_index)
         {
         case filepath_:
+            /*
             _filepath = command.substr(command.find_first_of('=') + 1);
             while ( _filepath.find(' ') != std::string::npos ){
                 _filepath.erase(_filepath.find(' '),  1);
+            }*/
+            if ( command.find('\'') != std::string::npos && command.find_first_of('\'') != command.find_last_of('\'') ){
+                _filepath = command.substr(command.find_first_of('\'') + 1, command.find_last_of('\'') - command.find_first_of('\'') - 1 );
             }
             break;
         case fileout_:
-            _fileout = command.substr(command.find_first_of('=') + 1);
+            /*_fileout = command.substr(command.find_first_of('=') + 1);
             while ( _fileout.find(' ') != std::string::npos ){
                 _fileout.erase(_fileout.find(' '), 1);
+            }*/
+            if ( command.find('\'') != std::string::npos && command.find_first_of('\'') != command.find_last_of('\'') ){
+                _fileout = command.substr(command.find_first_of('\'') + 1, command.find_last_of('\'') - command.find_first_of('\'') - 1 );
             }
             break;  
         case id_: 
@@ -70,6 +77,19 @@ bool RunConfiguration::_getConfig(){
             _password = command.substr(command.find_first_of('=') + 1);
             while ( _password.find(' ') != std::string::npos ){
                 _password.erase(_password.find(' '), 1);
+            }
+            break;
+        case seedfile_:
+            /*
+            _seedfile = command.substr(command.find_first_of('=') + 1);
+            while ( _seedfile.find(' ') != std::string::npos ){
+                _seedfile.erase(_seedfile.find(' '), 1);
+            }
+            _use_seed_file = true;
+            */
+            if ( command.find('\'') != std::string::npos && command.find_first_of('\'') != command.find_last_of('\'') ){
+                _seedfile = command.substr(command.find_first_of('\'') + 1, command.find_last_of('\'') - command.find_first_of('\'') - 1 );
+                _use_seed_file = true;
             }
             break;
         case seed_:
@@ -115,4 +135,50 @@ void RunConfiguration::clear(){
     _mangling = true;
     _check_for_data_loss = false;
     _config_from_file = false;
+}
+void RunConfiguration::printConfig(){
+    for(int i = 0; i < endofconfig; i++){
+        std::string data;
+        switch (i){
+            case filepath_:
+                data = _filepath;
+                break;
+            case fileout_:
+                data = _fileout;
+                break;  
+            case id_: 
+                data = _id;
+                break;
+            case pass_:
+                data = _password;
+                break;
+            case seedfile_:
+                data = _seedfile;
+                break;
+            case seed_:
+                for(int j = 0; j < _seeds.size(); j++){
+                    std::cout << AVAILABLE_CONFIGURATIONS[i] << " : " + _seeds[j] << std::endl;
+                }
+                continue;
+            case mangling_:
+                data = std::to_string(_mangling);
+                break;
+            case datalosscheck_:
+                data = std::to_string(_check_for_data_loss);
+                break;
+            case command_:
+                data = _command;
+                break;
+            case binfile_:
+                data = std::to_string(_binfile);
+                break;
+            case depth_:
+                data = std::to_string(_depth);
+                break;
+            default:
+                break;
+        }
+        std::cout << AVAILABLE_CONFIGURATIONS[i] << " : ";
+        std::cout << data << std::endl;
+    }
 }

@@ -12,11 +12,12 @@ namespace zEntryptUI
         public string command = string.Empty;
         public string id = string.Empty;
         public string pass = string.Empty;
+        public string seedfile = string.Empty;
         public List<string> seeds = new List<string>();
         public bool mangle = true;
-        public int mangleDepth = 5;
+        public int mangleDepth = 10;
         public bool binary = true;
-        public bool check = false;
+        public bool check = true;
 
         public string infilepath = string.Empty;
         public string outfilepath = string.Empty;
@@ -27,6 +28,7 @@ namespace zEntryptUI
         public const string PassKey = "pass";
         public const string InFileKey = "filepath";
         public const string OutFileKey = "fileout";
+        public const string SeedFileKey = "seedfile";
         public const string SeedKey = "addseed";
         public const string mangleKey = "mangle";
         public const string binKey = "binfile";
@@ -65,6 +67,11 @@ namespace zEntryptUI
             config.pass = pass;
         }
 
+        public void SetSeedfile(string seedfile)
+        {
+            config.seedfile = seedfile;
+        }
+
         public void SetSeeds(List<string> seeds)
         {
             config.seeds = seeds;
@@ -100,6 +107,11 @@ namespace zEntryptUI
             config.outfilepath = outfile;
         }
 
+        public void ResetConfig()
+        {
+            config = new zEncryptorConfiguration();
+        }
+
 
         public void SaveConfig(string filename)
         {
@@ -113,16 +125,125 @@ namespace zEntryptUI
             configStr += $"{zEncryptorConfiguration.checkKey} = {(config.check ? 1 : 0)} \n";
             configStr += $"{zEncryptorConfiguration.binKey} = {(config.binary ? 1 : 0)} \n";
 
-            foreach(string s in config.seeds)
+            if (config.seedfile != string.Empty)
+                configStr += $"{zEncryptorConfiguration.SeedFileKey} = '{config.seedfile}'\n";
+            else
             {
-                configStr += $"{zEncryptorConfiguration.SeedKey} = '{s}'\n";
+                foreach (string s in config.seeds)
+                {
+                    configStr += $"{zEncryptorConfiguration.SeedKey} = '{s}'\n";
+                }
             }
 
-            configStr += $"{zEncryptorConfiguration.InFileKey} = {config.infilepath}\n";
-            configStr += $"{zEncryptorConfiguration.OutFileKey} = {config.outfilepath}\n";
+            configStr += $"{zEncryptorConfiguration.InFileKey} = '{config.infilepath}'\n";
+            configStr += $"{zEncryptorConfiguration.OutFileKey} = '{config.outfilepath}'\n";
 
             File.WriteAllText(filename, configStr);
         }
 
+
+        public bool ReadFromFile(string filename)
+        {
+            try
+            {
+                var lines = File.ReadAllLines(filename);
+                config = new zEncryptorConfiguration();
+
+                foreach (var line in lines)
+                {
+                    if (line.StartsWith('#'))
+                        continue;
+
+                    if (line.StartsWith(zEncryptorConfiguration.CommandKey))
+                    {
+                        var com = line.Remove(0, line.IndexOf('=') + 1);
+                        com = com.Replace(" ", "");
+
+                        config.command = com;
+                    }
+                    else if (line.StartsWith(zEncryptorConfiguration.IDKey))
+                    {
+                        var com = line.Remove(0, line.IndexOf('=') + 1);
+                        com = com.Replace(" ", "");
+
+                        config.id = com;
+                    }
+                    else if (line.StartsWith(zEncryptorConfiguration.PassKey))
+                    {
+                        var com = line.Remove(0, line.IndexOf('=') + 1);
+                        com = com.Replace(" ", "");
+
+                        config.pass = com;
+                    }
+                    else if (line.StartsWith(zEncryptorConfiguration.mangleKey))
+                    {
+                        var com = line.Remove(0, line.IndexOf('=') + 1);
+                        com = com.Replace(" ", "");
+
+                        config.mangle = int.Parse(com) == 1;
+                    }
+                    else if (line.StartsWith(zEncryptorConfiguration.depthKey))
+                    {
+                        var com = line.Remove(0, line.IndexOf('=') + 1);
+                        com = com.Replace(" ", "");
+
+                        config.mangleDepth = int.Parse(com);
+                    }
+                    else if (line.StartsWith(zEncryptorConfiguration.checkKey))
+                    {
+                        var com = line.Remove(0, line.IndexOf('=') + 1);
+                        com = com.Replace(" ", "");
+
+                        config.check = int.Parse(com) == 1;
+                    }
+                    else if (line.StartsWith(zEncryptorConfiguration.binKey))
+                    {
+                        var com = line.Remove(0, line.IndexOf('=') + 1);
+                        com = com.Replace(" ", "");
+
+                        config.binary = int.Parse(com) == 1;
+                    }
+                    else if (line.StartsWith(zEncryptorConfiguration.SeedFileKey))
+                    {
+                        var com = line.Remove(0, line.IndexOf('=') + 1);
+                        com = com.Remove(0, com.IndexOf('\'') + 1);
+                        com = com.Remove(com.IndexOf('\''));
+
+                        config.seedfile = com;
+                    }
+                    else if (line.StartsWith(zEncryptorConfiguration.SeedKey))
+                    {
+                        var com = line.Remove(0, line.IndexOf('=') + 1);
+                        com = com.Remove(0, com.IndexOf('\'') + 1);
+                        com = com.Remove(com.IndexOf('\''));
+
+                        config.seeds.Add(com);
+                    }
+                    else if (line.StartsWith(zEncryptorConfiguration.InFileKey))
+                    {
+                        var com = line.Remove(0, line.IndexOf('=') + 1);
+                        com = com.Remove(0, com.IndexOf('\'') + 1);
+                        com = com.Remove(com.IndexOf('\''));
+
+                        config.infilepath = com;
+                    }
+                    else if (line.StartsWith(zEncryptorConfiguration.OutFileKey))
+                    {
+                        var com = line.Remove(0, line.IndexOf('=') + 1);
+                        com = com.Remove(0, com.IndexOf('\'') + 1);
+                        com = com.Remove(com.IndexOf('\''));
+
+                        config.outfilepath = com;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+
+
+            return true;
+        }
     }
 }
