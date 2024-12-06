@@ -3,7 +3,19 @@
 This software is an encrypt/decrypt engine with multiple layer of encryption using seeds and user authorization. <br />
 
 # Now with a GUI!
+Encypt screen
 <img src="repo/enc.png"/>
+
+Decypt screen
+<img src="repo/dec.png"/>
+
+Can generate and use 'seedfiles' for convinience
+<img src="repo/genseed.png"/>
+
+<img src="repo/enc_dia.png"/>
+
+<img src="repo/adv.png"/>
+
 
 # When building for the first time <br />
 <br />
