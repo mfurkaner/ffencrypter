@@ -24,52 +24,38 @@ Advanced settings dialog<br />
 # When building for the first time <br />
 <br />
 -> install cmake to build and run the app with ease <br />
+
 ```bash
 #!/bin/bash
 cd build ; cmake -DCMAKE_BUILD_TYPE=Release . ; cmake --build . --config Release    
-```<br />
--> use Visual Studio 2022 to build and release the GUI
+```
+
+-> use Visual Studio 2022 in the folder with .sln file to build and release the GUI <br />
 ```powershell
 dotnet publish -c Release -r win-x64 --self-contained       
-```<br />
+```
 
-# Using zEncrypter with a config file
+
+# Using zEncrypter in CLI with a config file
+```bash
+#!/bin/bash
+zEncrypter.exe -c config.in
+```
 Create a file named 'config.in' using the following options  <br />
-<br />
--> command = Command to run ( enc : encrypt, dec : decrypt ) <br />
+<p float="left">
+<img src="repo/conf_genseed.png" width="23%"/>
+<img src="repo/conf_enc.png" width="74%"/>
+</p>
+
+-> command = Command to run <br />
+-> available commands : enc : Encrypt, dec : Decrypt, pdif : Print differences of two files, gensf : Generate a seedfile, readsf : Read a seedfile <br />
 -> filepath = Relative path of the file to encrypt/decrypt <br />
 -> fileout = Relative path of the output file  <br />
 -> id = Id of the encrypter  <br />
 -> pass = Password of the encrypter <br />
+-> seedfile = Set a seedfile to be used (You must be the owner!)<br />
 -> addseed = Add a seed <br />
 -> mangling = Enable/disable mangling ( 0 : disable, 1 : enable ) <br />
 -> check = Enable/disable data loss check ( 0 : disable, 1 : enable ) <br />
 -> add '\#' at the beginning of a line to ignore the line <br />
-
-# For manual use:
-To encrypt a file <br />
 <br />
--> use enc command <br />
--> enter id of encrypter and a password, this will be used to authenticate the decryption later. <br />
--> enter the path to the file <br />
--> enter a path for the encrypted output file  ( enter '.' to use default path ) <br />
--> enter how many layers of encryption you want <br />
--> enter a seed for each encryption layer <br />
--> you are good to go <br />
-
-To decrypt a file <br />
-
--> use dec command <br />
--> enter id and password of the encrypter. If you fail at this step, application will not let you decrypt. <br />
--> enter the path to the file <br />
--> enter a path for the decrypted output file  ( enter '.' to use default path ) <br />
--> enter how many layers of encryption you want <br />
--> enter the seed for each decryption layer <br />
-
-To find and print out differences between two files <br />
-
--> use pdif command <br />
-
-To change the run settings ( Not implemented yet ) <br />
-
--> use settings command <br />
