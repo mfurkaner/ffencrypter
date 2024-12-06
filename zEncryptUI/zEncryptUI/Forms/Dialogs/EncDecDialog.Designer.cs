@@ -163,14 +163,17 @@ namespace zEntryptUI.Forms.Dialogs
             // 
             // seedfilePath
             // 
-            seedfilePath.AutoSize = true;
+            seedfilePath.AutoSize = false;
             seedfilePath.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            seedfilePath.Location = new Point(162, 148);
+            seedfilePath.Location = new Point(162, 143);
             seedfilePath.Name = "seedfilePath";
-            seedfilePath.Size = new Size(136, 15);
+            seedfilePath.Size = new Size(280, 15);
             seedfilePath.TabIndex = 7;
             seedfilePath.Text = "Seed dosyası seçilmedi!";
             seedfilePath.Click += seedfilePath_Click;
+            seedfilePath.Width = 280; // Set the desired width
+            seedfilePath.Height = 30;               // Set the desired height
+            seedfilePath.TextAlign = ContentAlignment.MiddleLeft; // Align text to the top-left
             // 
             // EncDecDialog
             // 
