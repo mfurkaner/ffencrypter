@@ -1,4 +1,5 @@
 ﻿using System.Resources;
+using System.Windows.Forms;
 
 namespace zEntryptUI.Forms.Dialogs
 {
@@ -227,7 +228,11 @@ namespace zEntryptUI.Forms.Dialogs
             // Set dialog properties
             openFileDialog.Filter = "Seedfiles (*.sf)|*.sf|All Files (*.*)|*.*"; // Filter to .sf files
             openFileDialog.Title = "Select an Seedfile";
-            openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments); // Optional
+
+            if (Directory.Exists("seedfiles") == false)
+                Directory.CreateDirectory("seedfiles");
+
+            openFileDialog.InitialDirectory = Path.GetFullPath("seedfiles/");
 
             // Show the dialog and check if a file was selected
             if (openFileDialog.ShowDialog() == DialogResult.OK)

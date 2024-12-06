@@ -70,5 +70,6 @@
         "memory_resource": "cpp",
         "numeric": "cpp",
         "random": "cpp"
-    }
+    },
+    "cmake.sourceDirectory": "C:/Users/user/Repos/zEncrypter/build"
 }

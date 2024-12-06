@@ -218,9 +218,13 @@ namespace zEncryptUI.Forms
             using (SaveFileDialog saveFileDialog = new SaveFileDialog())
             {
                 // Set initial properties for the SaveFileDialog
+                if (Directory.Exists("seedfiles") == false)
+                    Directory.CreateDirectory("seedfiles");
+
+                saveFileDialog.InitialDirectory = Path.GetFullPath("seedfiles/");
                 saveFileDialog.Title = "Save Seedfile";
                 saveFileDialog.Filter = "Seed Files (*.sf)|*.sf|All Files (*.*)|*.*"; // Allow text or all files
-                saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments); // Default to user's Documents folder
+                //saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments); // Default to user's Documents folder
                 saveFileDialog.FileName = "zEncyptSeedfile.sf"; // Suggest a default filename
 
                 // Show the dialog and get the result

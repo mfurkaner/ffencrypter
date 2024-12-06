@@ -2,6 +2,9 @@
 <br />
 This software is an encrypt/decrypt engine with multiple layer of encryption using seeds and user authorization. <br />
 
+# Now with a GUI!
+<img src="repo/enc.png"/>
+
 # When building for the first time <br />
 <br />
 -> use bash scripts in scripts/ directory for convenience <br />
